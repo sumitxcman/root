@@ -1,0 +1,13 @@
+# Sensitive files
+.env
+.env.*
+
+# Dependencies
+vendor/
+
+# User Uploads
+assets/uploads/
+
+# OS files
+.DS_Store
+Thumbs.db
