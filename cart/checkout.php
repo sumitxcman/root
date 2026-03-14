@@ -5,7 +5,7 @@ include '../partials/header.php';
 $user_id = $_SESSION['user_id'] ?? null;
 if (!$user_id) { header("Location: ../sign-in.php"); exit; }
 
-// Cart Total nikalne ke liye
+
 $stmt = $pdo->prepare("SELECT SUM(p.price * c.quantity) FROM cart c JOIN products p ON c.product_id = p.id WHERE c.user_id = ?");
 $stmt->execute([$user_id]);
 $total = $stmt->fetchColumn() ?? 0;

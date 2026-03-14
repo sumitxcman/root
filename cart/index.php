@@ -4,14 +4,14 @@ include '../partials/header.php';
 
 $user_id = $_SESSION['user_id'] ?? null;
 
-// Check user login
+
 if (!$user_id) {
     echo "<div class='container mt-5 text-center'><h3>Pehle login karein!</h3><a href='../sign-in.php' class='btn btn-primary'>Login Page</a></div>";
     include '../partials/footer.php';
     exit;
 }
 
-// Fetch cart items
+
 $stmt = $pdo->prepare("SELECT cart.*, products.name, products.price, products.image 
                        FROM cart 
                        JOIN products ON cart.product_id = products.id 

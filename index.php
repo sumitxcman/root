@@ -1,11 +1,11 @@
 <?php
 require 'include/load.php';
 
-// Products fetch karein
+
 $stmt = $pdo->query("SELECT * FROM products ORDER BY id DESC");
 $products = $stmt->fetchAll();
 
-// Cart count nikalne ke liye
+
 $cart_count = 0;
 if(isset($_SESSION['user_id'])) {
     $stmt_count = $pdo->prepare("SELECT COUNT(*) FROM cart WHERE user_id = ?");
@@ -17,7 +17,7 @@ include 'partials/head.php';
 ?>
 
 <style>
-    /* Cards ko stretch hone se rokne ke liye CSS */
+   
     .products-container {
         display: flex;
         flex-wrap: wrap;
@@ -25,7 +25,7 @@ include 'partials/head.php';
         justify-content: center;
         padding: 40px 20px;
         background: #f8f9fa;
-        align-items: flex-start; /* Ye line cards ko lamba hone se rokegi */
+        align-items: flex-start; 
     }
     .product-card {
         background: white;
@@ -65,6 +65,7 @@ include 'partials/head.php';
     <div style="display: flex; align-items: center;">
         <a href="index.php" style="color: white; text-decoration: none; font-size: 20px; font-weight: 800; letter-spacing: 1px;">
             MY SHOP <span style="font-size: 22px;"></span>
+            <link rel="stylesheet" href="/root/css/style.css">
         </a>
     </div>
 

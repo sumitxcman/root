@@ -1,7 +1,7 @@
 <?php
 require 'include/load.php';
 
-// Fake data create karne ke liye arrays
+
 $first_names = ['Ali', 'Ahmed', 'Sara', 'Zain', 'Hamza', 'Danish', 'Fatima', 'Bilal', 'Sana', 'Usman'];
 $last_names = ['Khan', 'Sheikh', 'Malik', 'Raza', 'Ahmed', 'Hassan', 'Javed', 'Abbasi', 'Mughal', 'Iqbal'];
 
@@ -16,8 +16,8 @@ try {
         
         $username = strtolower($f . "_" . $l . $i);
         $email = $username . "@example.com";
-        $password = password_hash('password123', PASSWORD_DEFAULT); // Default password sabka
-        $role = ($i == 1) ? 'admin' : 'user'; // Pehla wala admin baaki users
+        $password = password_hash('password123', PASSWORD_DEFAULT); 
+        $role = ($i == 1) ? 'admin' : 'user'; 
         
         $stmt->execute([$username, $email, $password, $role]);
         

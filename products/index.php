@@ -2,7 +2,7 @@
 require '../include/load.php';
 checkLogin();
 
-/* Fetch Products */
+
 $stmt = $pdo->query("SELECT * FROM products ORDER BY created_at DESC");
 $products = $stmt->fetchAll();
 
@@ -42,7 +42,7 @@ include '../partials/head.php';
             <?php foreach ($products as $p): ?>
             <tr>
 
-                <!-- ✅ IMAGE SHOW -->
+               
                 <td align="center">
                     <?php if(!empty($p['image'])): ?>
 
@@ -57,13 +57,13 @@ include '../partials/head.php';
                     <?php endif; ?>
                 </td>
 
-                <!-- PRODUCT NAME -->
+                
                 <td><?= e($p['name']) ?></td>
 
-                <!-- PRICE -->
+               
                 <td>$<?= e($p['price']) ?></td>
 
-                <!-- ACTIONS -->
+              
                 <td>
                     <a href="edit.php?id=<?= $p['id'] ?>">Edit</a> |
                     <a href="#"

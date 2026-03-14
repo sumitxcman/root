@@ -10,29 +10,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $price = $_POST['price'];
     $desc = $_POST['description'];
 
-    // --- FILE UPLOAD LOGIC START ---
+   
     
-    // 1. Define where to save the image
+    
     $targetDir = "../assets/uploads/";
     
-    // 2. Create a unique name (Time + Original Name) to prevent overwriting
-    // Example: 17098234_myphoto.jpg
+   
     $fileName = time() . "_" . basename($_FILES["image"]["name"]); 
     $targetFile = $targetDir . $fileName;
     $uploadOk = true;
 
-    // 3. Check if it's a real image
+    
     $check = getimagesize($_FILES["image"]["tmp_name"]);
     if($check === false) {
         $error = "File is not an image.";
         $uploadOk = false;
     }
 
-    // 4. If everything is OK, move the file & save to DB
+    
     if ($uploadOk) {
         if (move_uploaded_file($_FILES["image"]["tmp_name"], $targetFile)) {
-            // SUCCESS: File is safely in 'assets/uploads/'
-            // Now save the INFO to the Database
+            
             try {
                 $stmt = $pdo->prepare("INSERT INTO products (name, description, price, image_path) VALUES (?, ?, ?, ?)");
                 $stmt->execute([$name, $desc, $price, $fileName]); // Note: We save $fileName, not the file itself

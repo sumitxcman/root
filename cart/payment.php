@@ -1,5 +1,6 @@
 <?php
 require '../include/load.php';
+
 checkLogin();
 
 if (!isset($_SESSION['cart']) || empty($_SESSION['cart'])) {

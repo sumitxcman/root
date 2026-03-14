@@ -31,8 +31,8 @@ include 'partials/header.php';
     <?php include 'partials/sidebar.php'; ?>
 
     <div style="flex:1;padding:40px;">
-
-        <!-- HEADER -->
+     
+        
         <div style="background:white;padding:25px;border-radius:12px;
         box-shadow:0 2px 10px rgba(0,0,0,0.05);margin-bottom:30px;">
             <h2 style="margin:0;color:#2d3436;">Admin Dashboard</h2>
@@ -42,12 +42,12 @@ include 'partials/header.php';
             </p>
         </div>
 
-        <!-- DASHBOARD CARDS -->
+        
         <div style="display:grid;
         grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
         gap:25px;">
 
-            <!-- TOTAL USERS -->
+           
             <div style="padding:30px;background:linear-gradient(135deg,#6c5ce7,#a29bfe);
             color:white;border-radius:15px;">
                 <h5>Total Users</h5>
@@ -55,14 +55,14 @@ include 'partials/header.php';
                 <a href="users/index.php" style="color:white;">Manage Users →</a>
             </div>
 
-            <!-- PENDING USERS -->
+            
             <div style="padding:30px;background:linear-gradient(135deg,#fdcb6e,#e17055);
             color:white;border-radius:15px;">
                 <h5>Pending Users</h5>
                 <h1><?= $pending_users ?></h1>
             </div>
 
-            <!-- TOTAL PRODUCTS -->
+           
             <div style="padding:30px;background:linear-gradient(135deg,#00b894,#55efc4);
             color:white;border-radius:15px;">
                 <h5>Total Products</h5>
@@ -70,7 +70,7 @@ include 'partials/header.php';
                 <a href="products.php" style="color:white;">Manage Products →</a>
             </div>
 
-            <!-- PENDING PRODUCTS -->
+            
             <div style="padding:30px;background:linear-gradient(135deg,#0984e3,#74b9ff);
             color:white;border-radius:15px;">
                 <h5>Pending Products</h5>

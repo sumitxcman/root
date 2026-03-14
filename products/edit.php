@@ -1,6 +1,6 @@
 <?php
 require '../include/load.php';
-checkLogin(); // Security check
+checkLogin(); 
 
 
 if (!isset($_GET['id'])) {

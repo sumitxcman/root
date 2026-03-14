@@ -1,7 +1,7 @@
 <?php
 require 'include/load.php';
 
-// 1. If already logged in
+
 if (isLoggedIn()) {
     header("Location: dashboard.php");
     exit;
@@ -10,7 +10,7 @@ if (isLoggedIn()) {
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // CSRF Check
+    
     if (!isset($_POST['csrf_token']) || !verify_csrf_token($_POST['csrf_token'])) {
         die("Security Token Invalid.");
     }
@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    // Hardcoded Root User
+    
     if ($email === 'root' && $password === '12345678') {
         $_SESSION['user_id'] = 1;
         $_SESSION['user_name'] = 'root';
@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header("Location: dashboard.php");
         exit;
     } 
-    // Database Login
+   
     elseif (login($email, $password, $pdo)) {
         header("Location: dashboard.php");
         exit;
@@ -41,6 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <title>Sign In</title>
+    <link rel="stylesheet" href="/root/css/style.css">
     <style>
         body { display: flex; justify-content: center; align-items: center; height: 100vh; background: #f4f4f4; font-family: sans-serif; }
         .login-box { background: white; padding: 30px; border-radius: 5px; box-shadow: 0 0 10px rgba(0,0,0,0.1); width: 300px; }

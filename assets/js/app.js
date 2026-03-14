@@ -1,11 +1,10 @@
-// Generic function to delete any item (User, Product, etc.)
+
 function deleteItem(id, type) {
     if (!confirm("Are you sure you want to delete this?")) {
         return; // Stop if they clicked Cancel
     }
 
-    // Call the API
-    // Note: We use dynamic URL based on 'type' (users or products)
+    
     fetch(`../api/${type}/delete.php`, {
         method: 'POST',
         headers: {
@@ -17,7 +16,7 @@ function deleteItem(id, type) {
     .then(data => {
         if (data.status === 'success') {
             alert('Deleted successfully!');
-            location.reload(); // Refresh the table
+            location.reload(); 
         } else {
             alert('Error: ' + data.message);
         }

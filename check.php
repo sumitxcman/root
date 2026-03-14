@@ -9,7 +9,7 @@ if (file_exists($path_to_add)) {
 } else {
     echo "<b style='color:red;'> ";
     
-    // Check if it's in the root instead
+    
     if (file_exists(__DIR__ . '/add.php')) {
         echo "<br> ";
     }

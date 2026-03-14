@@ -1,9 +1,9 @@
 <?php
 
-// ✅ Correct Path (2 level up)
+
 require '../../include/load.php';
 
-checkLogin(); // Must be logged in
+checkLogin(); 
 
 if (empty($_SESSION['cart'])) {
     header("Location: ../../index.php");
@@ -12,10 +12,10 @@ if (empty($_SESSION['cart'])) {
 
 try {
 
-    // 1️⃣ Start Transaction
+    
     $db->beginTransaction();
 
-    // 2️⃣ Get Products from DB
+    
     $ids = array_keys($_SESSION['cart']);
     $placeholders = implode(',', array_fill(0, count($ids), '?'));
 
@@ -30,13 +30,13 @@ try {
         $grandTotal += $p['price'] * $qty;
     }
 
-    // 3️⃣ Insert Order
+    
     $stmt = $db->prepare("INSERT INTO orders (user_id, total_amount) VALUES (?, ?)");
     $stmt->execute([$_SESSION['user_id'], $grandTotal]);
 
     $orderId = $db->lastInsertId();
 
-    // 4️⃣ Insert Order Items
+    
     $sql = "INSERT INTO order_items (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?)";
     $stmtItems = $db->prepare($sql);
 
@@ -45,10 +45,10 @@ try {
         $stmtItems->execute([$orderId, $p['id'], $qty, $p['price']]);
     }
 
-    // 5️⃣ Commit Transaction
+    
     $db->commit();
 
-    // 6️⃣ Clear Cart
+    
     $_SESSION['cart'] = [];
 
     echo "<h1>Order Success! Order ID: #$orderId</h1>";
@@ -56,7 +56,7 @@ try {
 
 } catch (Exception $e) {
 
-    // 7️⃣ Rollback if Error
+    r
     $db->rollBack();
     die("Order failed: " . $e->getMessage());
 }
