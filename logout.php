@@ -1,21 +1,12 @@
+
+
+
 <?php
-require 'include/load.php';
-
-
+require_once 'include/load.php';
 $_SESSION = [];
-
-
-if (ini_get("session.use_cookies")) {
-    $params = session_get_cookie_params();
-    setcookie(session_name(), '', time() - 42000,
-        $params["path"], $params["domain"],
-        $params["secure"], $params["httponly"]
-    );
-}
-
-
 session_destroy();
 
-
-redirect('sign-in.php');
+// Ab redirect 'sign-up.php' par hoga
+header("Location: sign-up.php"); 
+exit;
 ?>
