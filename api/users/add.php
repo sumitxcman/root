@@ -2,19 +2,19 @@
 require_once '../../include/load.php';
 
 
-checkLogin();
+check_login();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
    
     
     $name     = $_POST['name'];
     $email    = $_POST['email'];
-    $password = $_POST['password']; 
+    $password = password_hash($_POST['password'], PASSWORD_DEFAULT); 
     $role     = 'user'; 
 
     try {
         
-        $stmt = $pdo->prepare("INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)");
+        $stmt = $conn->prepare("INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)");
         $stmt->execute([$name, $email, $password, $role]);
 
         

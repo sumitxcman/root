@@ -1,12 +1,9 @@
-
-
-
 <?php
-require_once 'include/load.php';
-$_SESSION = [];
+session_start();
+session_unset();
 session_destroy();
 
-// Ab redirect 'sign-up.php' par hoga
-header("Location: sign-up.php"); 
+// Redirecting to Sign In page as per your screenshot
+header("Location: sign-in.php"); 
 exit;
 ?>

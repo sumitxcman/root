@@ -1,122 +1,64 @@
 <?php
-require 'include/load.php';
+session_start();
+include_once 'include/db.php';
 
+$isLoggedIn = isset($_SESSION['user_id']);
+$isAdmin = (isset($_SESSION['role']) && $_SESSION['role'] === 'admin');
+$username = $_SESSION['username'] ?? 'User';
 
-$stmt = $pdo->query("SELECT * FROM products ORDER BY id DESC");
-$products = $stmt->fetchAll();
-
-
-$cart_count = 0;
-if(isset($_SESSION['user_id'])) {
-    $stmt_count = $pdo->prepare("SELECT COUNT(*) FROM cart WHERE user_id = ?");
-    $stmt_count->execute([$_SESSION['user_id']]);
-    $cart_count = $stmt_count->fetchColumn() ?: 0;
-}
-
-include 'partials/head.php';
+// Products Fetch
+try {
+    $stmt = $conn->query("SELECT * FROM products ORDER BY id DESC");
+    $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) { $products = []; }
 ?>
-
-<style>
-   
-    .products-container {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 20px;
-        justify-content: center;
-        padding: 40px 20px;
-        background: #f8f9fa;
-        align-items: flex-start; 
-    }
-    .product-card {
-        background: white;
-        width: 220px;
-        border-radius: 10px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-        transition: transform 0.2s;
-    }
-    .product-card:hover {
-        transform: translateY(-5px);
-    }
-    .img-container {
-        width: 100%;
-        height: 180px;
-        background: #fff;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 10px;
-    }
-    .img-container img {
-        max-width: 100%;
-        max-height: 100%;
-        object-fit: contain;
-    }
-    .card-body {
-        padding: 15px;
-        text-align: left;
-    }
-</style>
-
-<nav style="background: #1a1a1a; color: white; padding: 0 40px; height: 60px; display: flex; justify-content: space-between; align-items: center; font-family: 'Inter', sans-serif; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
-    
-    <div style="display: flex; align-items: center;">
-        <a href="index.php" style="color: white; text-decoration: none; font-size: 20px; font-weight: 800; letter-spacing: 1px;">
-            MY SHOP <span style="font-size: 22px;"></span>
-            <link rel="stylesheet" href="/root/css/style.css">
-        </a>
-    </div>
-
-    <div style="display: flex; gap: 25px; align-items: center;">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MY SHOP | Home</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <style>
+        body { background-color: #020617; color: #94a3b8; font-family: 'Plus Jakarta Sans', sans-serif; }
+        .glass-header { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(12px); border-bottom: 1px solid #1e293b; }
+        .product-card { background: #0f172a; border: 1px solid #1e293b; border-radius: 1.5rem; transition: 0.3s; }
+        .product-card:hover { border-color: #3b82f6; transform: translateY(-5px); }
+    </style>
+</head>
+<body>
+    <header class="glass-header sticky top-0 z-50 h-[80px] flex items-center px-8 justify-between">
+        <div class="text-white text-2xl font-black italic">MY SHOP</div>
         
-        <a href="cart/index.php" style="color: white; text-decoration: none; font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.1); padding: 6px 15px; border-radius: 20px; transition: 0.3s;">
-            <span>Cart</span>
-            <span style="background: #ff4757; color: white; min-width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: bold;">
-                <?= $cart_count ?>
-            </span>
-        </a>
-
-        <?php if(isset($_SESSION['user_id'])): ?>
-            <a href="dashboard.php" style="color: #eccc68; text-decoration: none; font-size: 14px; font-weight: 500;">Dashboard</a>
-            <a href="logout.php" style="color: #ff6b81; text-decoration: none; font-size: 14px; font-weight: 500; border: 1px solid #ff6b81; padding: 5px 15px; border-radius: 5px; transition: 0.3s;">Logout</a>
-        <?php else: ?>
-            <a href="sign-in.php" style="color: white; text-decoration: none; font-size: 14px; font-weight: 500;">Login</a>
-        <?php endif; ?>
-
-    </div>
-</nav>
-
-<div class="products-container">
-    <?php foreach ($products as $p): ?>
-    <div class="product-card">
-        <div class="img-container">
-            <img src="assets/uploads/<?= e($p['image']) ?>" onerror="this.src='https://via.placeholder.com/220x180?text=No+Image'">
+        <div class="flex items-center gap-4">
+            <?php if(!$isLoggedIn): ?>
+                <a href="sign-in.php" class="bg-blue-600 text-white px-6 py-2.5 rounded-xl text-xs font-bold uppercase tracking-widest transition-all">Login</a>
+            <?php else: ?>
+                <div class="flex items-center gap-3 bg-slate-900/50 p-1 pr-4 rounded-2xl border border-slate-800">
+                    <?php if($isAdmin): ?>
+                        <a href="dashboard.php" class="bg-blue-500/10 text-blue-500 px-4 py-1.5 rounded-xl text-[10px] font-black uppercase border border-blue-500/20">Admin Panel</a>
+                    <?php else: ?>
+                        <a href="user-dashboard.php" class="bg-emerald-500/10 text-emerald-500 px-4 py-1.5 rounded-xl text-[10px] font-black uppercase border border-emerald-500/20">My Account</a>
+                    <?php endif; ?>
+                    <img src="https://ui-avatars.com/api/?name=<?= $username ?>&background=3b82f6&color=fff" class="w-8 h-8 rounded-lg">
+                    <a href="logout.php" class="text-[10px] font-bold text-red-400 uppercase">Logout</a>
+                </div>
+            <?php endif; ?>
         </div>
-        <div class="card-body">
-            <h3 style="margin: 0 0 10px; font-size: 16px; color: #333; height: 40px; overflow: hidden;"><?= e($p['name']) ?></h3>
-            <p style="color: #2ed573; font-weight: bold; font-size: 18px; margin-bottom: 15px;">$<?= number_format($p['price'], 2) ?></p>
-            <button onclick="addToCart(<?= $p['id'] ?>)" style="background: #007bff; color: white; border: none; padding: 10px; width: 100%; border-radius: 5px; cursor: pointer; font-weight: bold;">
-                Add to Cart
-            </button>
-        </div>
-    </div>
-    <?php endforeach; ?>
-</div>
+    </header>
 
-<script>
-function addToCart(productId) {
-    fetch('api/cart/add.php?product_id=' + productId)
-    .then(res => res.json())
-    .then(data => {
-        if(data.status === 'success') {
-            alert('Added to cart! ');
-            location.reload(); 
-        } else {
-            alert(data.message);
-        }
-    });
-}
-</script>
+    <main class="max-w-[1440px] mx-auto p-12">
+        <h2 class="text-3xl font-black text-white uppercase mb-8">New Arrivals</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            <?php foreach ($products as $prod): ?>
+                <div class="product-card p-4">
+                    <img src="assets/uploads/<?= $prod['image'] ?>" class="w-full h-48 object-cover rounded-xl mb-4" onerror="this.src='https://placehold.co/400x400/1e293b/3b82f6?text=Product'">
+                    <h4 class="text-white font-bold"><?= htmlspecialchars($prod['name']) ?></h4>
+                    <p class="text-blue-500 font-black mt-2">₹<?= number_format($prod['price']) ?></p>
+                    <button class="w-full bg-slate-800 hover:bg-blue-600 text-white py-2 rounded-lg mt-4 text-xs font-bold transition-all">Add to Cart</button>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </main>
 </body>
+</html>

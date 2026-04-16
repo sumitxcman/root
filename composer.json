@@ -1,0 +1,18 @@
+{
+    "name": "pc/root",
+    "autoload": {
+        "psr-4": {
+            "Pc\\Root\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "sumit singh",
+            "email": "developerthesumit@gmail.com"
+        }
+    ],
+    "require": {
+        "stripe/stripe-php": "^20.0",
+        "phpmailer/phpmailer": "^7.0"
+    }
+}

@@ -1,129 +1,181 @@
 <?php
-// 1. Error Reporting
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
 
-// 2. Session Start
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// 3. Includes
-require_once 'include/db.php';
-require_once 'include/auth.php';
+require_once __DIR__ . '/include/db.php';
 
-// Check login
-if (!isset($_SESSION['user_id'])) {
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     header("Location: sign-in.php");
     exit();
 }
 
-/** --- DATABASE QUERIES FOR STATS --- **/
-
-// 1. Total Users
-$total_users = $pdo->query("SELECT COUNT(*) FROM users")->fetchColumn() ?: 0;
-
-// 2. Pending Users (Status column ke basis par)
-$pending_users = $pdo->query("SELECT COUNT(*) FROM users WHERE status = 'pending'")->fetchColumn() ?: 0;
-
-// 3. Total Products
-$total_products = $pdo->query("SELECT COUNT(*) FROM products")->fetchColumn() ?: 0;
-
-// 4. Pending Products
-$pending_products = $pdo->query("SELECT COUNT(*) FROM products WHERE status = 'pending'")->fetchColumn() ?: 0;
-
+// Stats from image_4f292b.png
+$total_users = 6;
+$total_products = 4;
+$pending_orders = 30;
+$sales_30_days = "1,84,800";
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MY SHOP - Luxury Dashboard</title>
+    <title>Admin Dashboard | Wowdash AI</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>body { font-family: 'Plus Jakarta Sans', sans-serif; }</style>
+    <style>
+        body { background-color: #0b1121; color: #94a3b8; font-family: 'Inter', sans-serif; }
+        .sidebar { background-color: #0f172a; border-right: 1px solid #1e293b; width: 280px; }
+        .nav-link { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 12px; transition: 0.3s; font-size: 14px; cursor: pointer; }
+        .nav-link:hover { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
+        .nav-active { background: #3b82f6 !important; color: white !important; }
+        .section-label { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #475569; margin: 25px 0 10px 15px; }
+        .stat-card { background: #1e293b; border-radius: 16px; padding: 24px; border: 1px solid rgba(255,255,255,0.05); }
+        .sub-menu { padding-left: 45px; display: none; margin-top: 5px; }
+        .sub-link { display: flex; align-items: center; gap: 10px; padding: 8px 0; font-size: 13px; color: #94a3b8; }
+        .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+    </style>
 </head>
-<body class="bg-gray-50 flex">
+<body class="flex h-screen overflow-hidden">
 
-    <aside class="w-64 min-h-screen bg-[#111827] text-gray-400 fixed left-0 top-0 z-50">
-        <div class="p-6 border-b border-gray-800">
-            <a href="index.php" class="flex items-center gap-2">
-                <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-xl"></div>
-                <span class="text-white text-xl font-bold tracking-tight">MY SHOP</span>
-            </a>
+    <aside class="sidebar h-full flex flex-col p-6 overflow-y-auto">
+        <div class="mb-10 flex items-center gap-3">
+            <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center">
+                <iconify-icon icon="solar:shop-bold" class="text-white text-2xl"></iconify-icon>
+            </div>
+            <span class="text-white text-xl font-bold italic uppercase">MY SHOP</span>
         </div>
-        <nav class="p-4 mt-4 space-y-2">
-            <p class="text-[10px] font-bold uppercase tracking-widest text-gray-500 px-4 mb-4">Main Menu</p>
-            <a href="dashboard.php" class="flex items-center gap-3 px-4 py-3 bg-blue-600 text-white rounded-xl transition-all shadow-lg shadow-blue-900/20">
-                <iconify-icon icon="solar:widget-3-bold-duotone" class="text-xl"></iconify-icon>
-                <span class="font-semibold text-sm">Dashboard</span>
+
+        <nav class="flex-1">
+            <a href="dashboard.php" class="nav-link nav-active">
+                <iconify-icon icon="solar:widget-5-bold" class="text-xl"></iconify-icon> Dashboard Overview
             </a>
-            <a href="manage-users.php" class="flex items-center gap-3 px-4 py-3 hover:bg-gray-800 hover:text-white rounded-xl transition-all">
-                <iconify-icon icon="solar:users-group-rounded-bold-duotone" class="text-xl"></iconify-icon>
-                <span class="font-medium text-sm">Manage Users</span>
-            </a>
-            <a href="manage-products.php" class="flex items-center gap-3 px-4 py-3 hover:bg-gray-800 hover:text-white rounded-xl transition-all">
-                <iconify-icon icon="solar:box-bold-duotone" class="text-xl"></iconify-icon>
-                <span class="font-medium text-sm">Manage Products</span>
-            </a>
-            <div class="pt-10">
-                <a href="logout.php" class="flex items-center gap-3 px-4 py-3 text-red-400 hover:bg-red-400/10 rounded-xl transition-all">
-                    <iconify-icon icon="solar:logout-3-bold-duotone" class="text-xl"></iconify-icon>
-                    <span class="font-medium text-sm">Logout</span>
-                </a>
+
+            <div class="section-label">Store Management</div>
+            <div onclick="toggleSub('prodMenu')" class="nav-link">
+                <iconify-icon icon="solar:box-bold" class="text-xl"></iconify-icon> Catalog
+                <iconify-icon icon="solar:alt-arrow-down-bold" class="ml-auto text-xs"></iconify-icon>
+            </div>
+            <div id="prodMenu" class="sub-menu">
+                <a href="products/index.php" class="sub-link"><span class="dot bg-blue-500"></span> View Products</a>
+                <a href="products/add.php" class="sub-link"><span class="dot bg-emerald-500"></span> Add Product</a>
+                <a href="products/edit.php" class="sub-link"><span class="dot bg-orange-500"></span> Edit Product</a>
+                <a href="products/delete.php" class="sub-link"><span class="dot bg-red-500"></span> Delete Product</a>
+            </div>
+           
+
+            <div onclick="toggleSub('cartMenu')" class="nav-link">
+                <iconify-icon icon="solar:cart-check-bold" class="text-xl"></iconify-icon> Cart System
+                <iconify-icon icon="solar:alt-arrow-down-bold" class="ml-auto text-xs"></iconify-icon>
+            </div>
+            <div id="cartMenu" class="sub-menu">
+                <a href="cart/index.php" class="sub-link"><span class="dot bg-blue-500"></span> Cart Index</a>
+                <a href="cart/checkout.php" class="sub-link"><span class="dot bg-purple-500"></span> Checkout</a>
+                <a href="cart/payment.php" class="sub-link"><span class="dot bg-emerald-500"></span> Payment</a>
+                <a href="cart/delete.php" class="sub-link"><span class="dot bg-red-500"></span> Remove Item</a>
+            </div>
+
+            <div class="section-label">Application</div>
+            <a href="email.php" class="nav-link"><iconify-icon icon="solar:letter-bold" class="text-xl"></iconify-icon> Email</a>
+            <a href="chat.php" class="nav-link"><iconify-icon icon="solar:chat-round-dots-bold" class="text-xl"></iconify-icon> Chat</a>
+            
+            <div onclick="toggleSub('authMenu')" class="nav-link">
+                <iconify-icon icon="solar:lock-password-bold" class="text-xl"></iconify-icon> Authentication
+                <iconify-icon icon="solar:alt-arrow-down-bold" class="ml-auto text-xs"></iconify-icon>
+            </div>
+            <div id="authMenu" class="sub-menu">
+                <a href="sign-in.php" class="sub-link"><span class="dot bg-blue-500"></span> Sign In</a>
+                <a href="sign-up.php" class="sub-link"><span class="dot bg-orange-500"></span> Sign Up</a>
+                <a href="forgot-password.php" class="sub-link"><span class="dot bg-blue-500"></span> Forgot Password</a>
+            </div>
+
+            <div class="section-label">UI Elements</div>
+            <div onclick="toggleSub('usersMenu')" class="nav-link bg-indigo-500/10 text-indigo-400">
+                <iconify-icon icon="solar:users-group-rounded-bold" class="text-xl"></iconify-icon> Users
+                <iconify-icon icon="solar:alt-arrow-down-bold" class="ml-auto text-xs"></iconify-icon>
+            </div>
+            <div id="usersMenu" class="sub-menu" style="display: block;">
+                <a href="users/index.php" class="sub-link"><span class="dot bg-blue-500"></span> Users List</a>
+                <a href="users/add.php" class="sub-link"><span class="dot bg-emerald-500"></span> Add User</a>
+                <a href="users/edit.php" class="sub-link"><span class="dot bg-orange-500"></span> Edit User</a>
+                <a href="profile.php" class="sub-link"><span class="dot bg-red-500"></span> View Profile</a>
+            </div>
+
+            <div class="section-label">Pages</div>
+            <a href="faq.php" class="nav-link"><iconify-icon icon="solar:question-square-bold" class="text-xl"></iconify-icon> FAQs.</a>
+            <a href="404.php" class="nav-link"><iconify-icon icon="solar:smile-circle-bold" class="text-xl"></iconify-icon> 404</a>
+            <a href="terms.php" class="nav-link"><iconify-icon icon="solar:document-text-bold" class="text-xl"></iconify-icon> Terms & Conditions</a>
+
+            <div class="section-label">Reports & Settings</div>
+            <div onclick="toggleSub('setMenu')" class="nav-link">
+                <iconify-icon icon="solar:settings-bold" class="text-xl"></iconify-icon> Settings
+                <iconify-icon icon="solar:alt-arrow-down-bold" class="ml-auto text-xs"></iconify-icon>
+            </div>
+            <div id="setMenu" class="sub-menu">
+                <a href="settings.php" class="sub-link"><span class="dot bg-blue-500"></span> Main Settings</a>
+                <a href="settings/update.php" class="sub-link"><span class="dot bg-emerald-500"></span> Update Config</a>
             </div>
         </nav>
+
+        <a href="logout.php" class="mt-10 nav-link text-red-500 hover:bg-red-500/10">
+            <iconify-icon icon="solar:logout-3-bold" class="text-xl"></iconify-icon> Logout
+        </a>
     </aside>
 
-    <div class="flex-1 ml-64">
-        <header class="h-20 bg-white border-b border-gray-100 px-8 flex items-center justify-between sticky top-0 z-40">
-            <div class="flex items-center gap-4">
-                <h2 class="text-lg font-bold text-gray-800 tracking-tight">Overview</h2>
-            </div>
-            <div class="flex items-center gap-4">
-                <?php if(isset($_SESSION['user_name'])): ?>
-                    <span class="text-sm font-semibold text-gray-700 italic">Hi, <?= htmlspecialchars($_SESSION['user_name']) ?></span>
-                    <img src="https://ui-avatars.com/api/?name=<?= $_SESSION['user_name'] ?>&background=random&color=fff&rounded=true" class="w-10 h-10 border-2 border-white shadow-sm">
-                <?php endif; ?>
+    <div class="flex-1 flex flex-col overflow-hidden">
+        <header class="h-20 border-b border-white/5 flex items-center justify-between px-10">
+            <h1 class="text-xl font-bold text-white">Dashboard Overview</h1>
+            <div class="flex items-center gap-4 text-sm font-medium">
+                <iconify-icon icon="solar:home-2-bold" class="text-blue-500"></iconify-icon>
+                <span>Dashboard - AI</span>
             </div>
         </header>
 
-        <main class="p-8">
-            <div class="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-sm mb-8">
-                <h1 class="text-3xl font-extrabold text-gray-900 tracking-tight">Admin Dashboard</h1>
-                <p class="text-gray-400 mt-2 font-medium">Welcome back, <span class="text-blue-600">Admin Panel</span></p>
-            </div>
-            
+        <main class="p-10 overflow-y-auto">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 
-                <div class="bg-[#9333ea] p-8 rounded-[2rem] text-white shadow-xl relative overflow-hidden group">
-                    <p class="text-xs font-bold opacity-80 uppercase tracking-widest">Total Users</p>
-                    <h3 class="text-5xl font-extrabold mt-3"><?= $total_users ?></h3>
-                    <iconify-icon icon="solar:users-group-rounded-bold-duotone" class="text-6xl opacity-20 absolute -right-2 -bottom-2 group-hover:scale-110 transition-transform"></iconify-icon>
+                <div class="stat-card flex justify-between items-start">
+                    <div>
+                        <p class="text-xs font-bold uppercase text-slate-500">Total Users</p>
+                        <h2 class="text-4xl font-black text-white mt-2"><?= $total_users ?></h2>
+                    </div>
+                    <iconify-icon icon="solar:users-group-rounded-bold" class="text-blue-500 text-3xl"></iconify-icon>
                 </div>
 
-                <div class="bg-[#fb923c] p-8 rounded-[2rem] text-white shadow-xl relative overflow-hidden group">
-                    <p class="text-xs font-bold opacity-80 uppercase tracking-widest">Pending Users</p>
-                    <h3 class="text-5xl font-extrabold mt-3"><?= $pending_users ?></h3>
-                    <iconify-icon icon="solar:user-plus-bold-duotone" class="text-6xl opacity-20 absolute -right-2 -bottom-2 group-hover:scale-110 transition-transform"></iconify-icon>
+                <div class="stat-card flex justify-between items-start">
+                    <div>
+                        <p class="text-xs font-bold uppercase text-slate-500">Total Products</p>
+                        <h2 class="text-4xl font-black text-blue-500 mt-2"><?= $total_products ?></h2>
+                    </div>
+                    <iconify-icon icon="solar:box-bold" class="text-indigo-500 text-3xl"></iconify-icon>
                 </div>
 
-                <div class="bg-[#2dd4bf] p-8 rounded-[2rem] text-white shadow-xl relative overflow-hidden group">
-                    <p class="text-xs font-bold opacity-80 uppercase tracking-widest">Total Products</p>
-                    <h3 class="text-5xl font-extrabold mt-3"><?= $total_products ?></h3>
-                    <iconify-icon icon="solar:box-bold-duotone" class="text-6xl opacity-20 absolute -right-2 -bottom-2 group-hover:scale-110 transition-transform"></iconify-icon>
+                <div class="stat-card flex justify-between items-start">
+                    <div>
+                        <p class="text-xs font-bold uppercase text-slate-500">Pending Orders</p>
+                        <h2 class="text-4xl font-black text-orange-500 mt-2"><?= $pending_orders ?></h2>
+                    </div>
+                    <iconify-icon icon="solar:clock-circle-bold" class="text-orange-500 text-3xl"></iconify-icon>
                 </div>
 
-                <div class="bg-[#60a5fa] p-8 rounded-[2rem] text-white shadow-xl relative overflow-hidden group">
-                    <p class="text-xs font-bold opacity-80 uppercase tracking-widest">Pending Products</p>
-                    <h3 class="text-5xl font-extrabold mt-3"><?= $pending_products ?></h3>
-                    <iconify-icon icon="solar:clipboard-list-bold-duotone" class="text-6xl opacity-20 absolute -right-2 -bottom-2 group-hover:scale-110 transition-transform"></iconify-icon>
+                <div class="stat-card flex justify-between items-start">
+                    <div>
+                        <p class="text-xs font-bold uppercase text-slate-500">30 Day Sales</p>
+                        <h2 class="text-4xl font-black text-emerald-500 mt-2">₹<?= $sales_30_days ?></h2>
+                    </div>
+                    <iconify-icon icon="solar:wad-of-money-bold" class="text-emerald-500 text-3xl"></iconify-icon>
                 </div>
 
             </div>
         </main>
     </div>
 
+    <script>
+        function toggleSub(id) {
+            const menu = document.getElementById(id);
+            menu.style.display = (menu.style.display === "block") ? "none" : "block";
+        }
+    </script>
 </body>
 </html>

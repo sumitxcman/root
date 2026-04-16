@@ -1,306 +1,107 @@
-<aside class="sidebar">
-    <button type="button" class="sidebar-close-btn !mt-4">
-        <iconify-icon icon="radix-icons:cross-2"></iconify-icon>
-    </button>
-    <div>
-        <a href="index.php" class="sidebar-logo">
-            <img src="assets/images/logo.png" alt="site logo" class="light-logo">
-            <img src="assets/images/logo-light.png" alt="site logo" class="dark-logo">
-            <img src="assets/images/logo-icon.png" alt="site logo" class="logo-icon">
-        </a>
+<script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+<aside class="w-64 h-screen bg-[#0f172a] text-gray-400 fixed left-0 top-0 z-50 flex flex-col border-r border-slate-800/50 shadow-2xl" 
+       x-data="{ openUsers: false, openAuth: false }">
+    
+    <div class="p-8">
+        <h1 class="text-white text-2xl font-black tracking-tighter uppercase italic">MY SHOP</h1>
     </div>
-    <div class="sidebar-menu-area">
-        <ul class="sidebar-menu" id="sidebar-menu">
-            <li class="dropdown">
-                <a href="javascript:void(0)">
-                    <iconify-icon icon="solar:home-smile-angle-outline" class="menu-icon"></iconify-icon>
-                    <span>Dashboard</span>
-                </a>
-                <ul class="sidebar-submenu">
-                  
-                </ul>
-            </li>
-            <li class="sidebar-menu-group-title">Application</li>
-            <li>
-                <a href="email.php">
-                    <iconify-icon icon="mage:email" class="menu-icon"></iconify-icon>
-                    <span>Email</span>
-                </a>
-            </li>
-            <li>
-                <a href="chat-message.php">
-                    <iconify-icon icon="bi:chat-dots" class="menu-icon"></iconify-icon>
-                    <span>Chat</span>
-                </a>
-            </li>
-            <li>
-                <a href="calendar-main.php">
-                    <iconify-icon icon="solar:calendar-outline" class="menu-icon"></iconify-icon>
-                    <span>Calendar</span>
-                </a>
-            </li>
-           
-            <li class="dropdown">
+
+    <nav class="flex-1 px-4 space-y-4 overflow-y-auto custom-scrollbar">
+        
+        <div class="px-2">
+            <a href="index.php?page=dashboard" 
+               class="flex items-center gap-3 <?php echo (!isset($_GET['page']) || $_GET['page'] == 'dashboard') ? 'bg-[#0ea5e9] text-white shadow-lg shadow-blue-500/20' : 'text-slate-400 hover:bg-slate-800/40 hover:text-white'; ?> px-5 py-3.5 rounded-2xl font-bold transition-all hover:scale-[1.02]">
+                <iconify-icon icon="solar:widget-5-bold-duotone" class="text-2xl"></iconify-icon>
+                <span class="text-sm">Dashboard Overview</span>
+            </a>
+        </div>
+
+        <div class="space-y-2">
+            <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 px-5 mb-4">Store Management</p>
+            
+            <a href="index.php?page=catalog" class="flex items-center gap-3 text-slate-400 px-5 py-3.5 rounded-2xl hover:bg-slate-800/40 hover:text-white transition-all group">
+                <iconify-icon icon="solar:folder-with-files-bold-duotone" class="text-xl group-hover:text-blue-400"></iconify-icon>
+                <span class="font-medium text-sm">Catalog</span>
+            </a>
+
+            <div class="px-2">
+                <button @click="openUsers = !openUsers" 
+                        :class="openUsers ? 'bg-[#3b82f6] text-white shadow-lg' : 'text-slate-400 hover:bg-slate-800/40'"
+                        class="w-full flex items-center justify-between px-5 py-3.5 rounded-2xl transition-all group">
+                    <div class="flex items-center gap-3">
+                        <iconify-icon icon="solar:users-group-rounded-bold" class="text-xl"></iconify-icon>
+                        <span class="font-semibold text-sm">Users</span>
+                    </div>
+                    <iconify-icon :icon="openUsers ? 'solar:alt-arrow-up-linear' : 'solar:alt-arrow-down-linear'" class="text-[10px]"></iconify-icon>
+                </button>
                 
+                <div x-show="openUsers" x-transition class="mt-2 ml-6 space-y-2 border-l border-slate-700/50 pl-4">
+                    <a href="index.php?page=users-list" class="flex items-center gap-3 py-2 text-sm text-slate-400 hover:text-white">
+                        <span class="w-2 h-2 rounded-full bg-blue-500"></span> Users List
+                    </a>
+                    <a href="index.php?page=users-grid" class="flex items-center gap-3 py-2 text-sm text-slate-400 hover:text-white">
+                        <span class="w-2 h-2 rounded-full bg-orange-500"></span> Users Grid
+                    </a>
+                    <a href="index.php?page=add-user" class="flex items-center gap-3 py-2 text-sm text-slate-400 hover:text-white">
+                        <span class="w-2 h-2 rounded-full bg-blue-600"></span> Add User
+                    </a>
+                    <a href="index.php?page=profile" class="flex items-center gap-3 py-2 text-sm text-slate-400 hover:text-white">
+                        <span class="w-2 h-2 rounded-full bg-red-500"></span> View Profile
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="space-y-2">
+            <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 px-5 mb-4">Application</p>
+            
+            <div class="px-2">
+                <button @click="openAuth = !openAuth" 
+                        :class="openAuth ? 'bg-[#3b82f6] text-white shadow-lg' : 'text-slate-400 hover:bg-slate-800/40'"
+                        class="w-full flex items-center justify-between px-5 py-3.5 rounded-2xl transition-all group">
+                    <div class="flex items-center gap-3">
+                        <iconify-icon icon="solar:lock-password-bold" class="text-xl"></iconify-icon>
+                        <span class="font-semibold text-sm">Authentication</span>
+                    </div>
+                    <iconify-icon :icon="openAuth ? 'solar:alt-arrow-up-linear' : 'solar:alt-arrow-down-linear'" class="text-[10px]"></iconify-icon>
+                </button>
                 
-            </li>
-            <li class="dropdown">
-                <a href="javascript:void(0)">
-                    <iconify-icon icon="hugeicons:ai-brain-03" class="menu-icon"></iconify-icon>
-                    <span>Ai Application</span>
-                </a>
-                <ul class="sidebar-submenu">
-                    <li>
-                        <a href="text-generator.php"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Text Generator</a>
-                    </li>
-                    <li>
-                        <a href="code-generator.php"><i class="ri-circle-fill circle-icon text-warning-600 w-auto"></i> Code Generator</a>
-                    </li>
-                   
-                </ul>
-            </li>
+                <div x-show="openAuth" x-transition class="mt-2 ml-6 space-y-2 border-l border-slate-700/50 pl-4">
+                    <a href="sign-in.php" class="flex items-center gap-3 py-2 text-sm text-slate-400 hover:text-white">
+                        <span class="w-2 h-2 rounded-full bg-blue-500"></span> Sign In
+                    </a>
+                    <a href="sign-up.php" class="flex items-center gap-3 py-2 text-sm text-slate-400 hover:text-white">
+                        <span class="w-2 h-2 rounded-full bg-orange-500"></span> Sign Up
+                    </a>
+                    <a href="forgot-password.php" class="flex items-center gap-3 py-2 text-sm text-slate-400 hover:text-white">
+                        <span class="w-2 h-2 rounded-full bg-blue-600"></span> Forgot Password
+                    </a>
+                </div>
+            </div>
+        </div>
 
-            <li class="dropdown">
-                <a href="javascript:void(0)">
-                    <iconify-icon icon="hugeicons:bitcoin-circle" class="menu-icon"></iconify-icon>
-                    <span>Crypto Currency</span>
-                </a>
-                <ul class="sidebar-submenu">
-                    <li>
-                        <a href="wallet.php"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Wallet</a>
-                    </li>
-                </ul>
-            </li>
+        <div class="space-y-1">
+            <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 px-5 mb-4">Support</p>
+            <a href="index.php?page=faq" class="flex items-center gap-3 text-slate-400 px-5 py-3.5 rounded-2xl hover:bg-slate-800/40 hover:text-white transition-all">
+                <iconify-icon icon="solar:question-circle-linear" class="text-xl"></iconify-icon>
+                <span class="font-medium text-sm">FAQs.</span>
+            </a>
+            <a href="index.php?page=404" class="flex items-center gap-3 text-slate-400 px-5 py-3.5 rounded-2xl hover:bg-slate-800/40 hover:text-white transition-all">
+                <iconify-icon icon="solar:sad-circle-linear" class="text-xl"></iconify-icon>
+                <span class="font-medium text-sm">404</span>
+            </a>
+            <a href="index.php?page=terms" class="flex items-center gap-3 text-slate-400 px-5 py-3.5 rounded-2xl hover:bg-slate-800/40 hover:text-white transition-all">
+                <iconify-icon icon="solar:info-circle-linear" class="text-xl"></iconify-icon>
+                <span class="font-medium text-sm">Terms & Conditions</span>
+            </a>
+        </div>
+    </nav>
 
-            <li class="sidebar-menu-group-title">UI Elements</li>
-
-            <li class="dropdown">
-                <a href="javascript:void(0)">
-                    <iconify-icon icon="solar:document-text-outline" class="menu-icon"></iconify-icon>
-                    <span>Components</span>
-                </a>
-                <ul class="sidebar-submenu">
-                    <li>
-                        <a href="typography.php"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Typography</a>
-                    </li>
-                    <li>
-                        <a href="colors.php"><i class="ri-circle-fill circle-icon text-warning-600 w-auto"></i> Colors</a>
-                    </li>
-                    <li>
-                        <a href="button.php"><i class="ri-circle-fill circle-icon text-success-600 w-auto"></i> Button</a>
-                    </li>
-                    <li>
-                        <a href="dropdown.php"><i class="ri-circle-fill circle-icon text-purple-600  dark:text-purple-400 w-auto"></i> Dropdown</a>
-                    </li>
-                    <li>
-                        <a href="alert.php"><i class="ri-circle-fill circle-icon text-warning-600 w-auto"></i> Alerts</a>
-                    </li>
-                    <li>
-                        <a href="card.php"><i class="ri-circle-fill circle-icon text-danger-600 w-auto"></i> Card</a>
-                    </li>
-                    <li>
-                        <a href="carousel.php"><i class="ri-circle-fill circle-icon text-info-600 w-auto"></i> Carousel</a>
-                    </li>
-                    <li>
-                        <a href="avatar.php"><i class="ri-circle-fill circle-icon text-success-600 w-auto"></i> Avatars</a>
-                    </li>
-                    <li>
-                        <a href="progress.php"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Progress bar</a>
-                    </li>
-                    <li>
-                        <a href="tabs.php"><i class="ri-circle-fill circle-icon text-warning-600 w-auto"></i> Tab & Accordion</a>
-                    </li>
-                    <li>
-                        <a href="pagination.php"><i class="ri-circle-fill circle-icon text-danger-600 w-auto"></i> Pagination</a>
-                    </li>
-                    <li>
-                        <a href="badges.php"><i class="ri-circle-fill circle-icon text-info-600 w-auto"></i> Badges</a>
-                    </li>
-                    <li>
-                        <a href="tooltip.php"><i class="ri-circle-fill circle-icon dark:text-purple-400 w-auto"></i> Tooltip & Popover</a>
-                    </li>
-                    <li>
-                        <a href="videos.php"><i class="ri-circle-fill circle-icon text-cyan-600 w-auto"></i> Videos</a>
-                    </li>
-                    <li>
-                        <a href="star-rating.php"><i class="ri-circle-fill circle-icon text-[#7f27ff] w-auto"></i> Star Ratings</a>
-                    </li>
-                    <li>
-                        <a href="tags.php"><i class="ri-circle-fill circle-icon text-[#8252e9] w-auto"></i> Tags</a>
-                    </li>
-                    <li>
-                        <a href="list.php"><i class="ri-circle-fill circle-icon text-[#e30a0a] w-auto"></i> List</a>
-                    </li>
-                    <li>
-                        <a href="calendar.php"><i class="ri-circle-fill circle-icon text-yellow-400 w-auto"></i> Calendar</a>
-                    </li>
-                    <li>
-                        <a href="radio.php"><i class="ri-circle-fill circle-icon text-orange-500 w-auto"></i> Radio</a>
-                    </li>
-                    <li>
-                        <a href="switch.php"><i class="ri-circle-fill circle-icon text-pink-600 w-auto"></i> Switch</a>
-                    </li>
-                    <li>
-                        <a href="image-upload.php"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Upload</a>
-                    </li>
-                </ul>
-            </li>
-            <li class="dropdown">
-                <a href="javascript:void(0)">
-                    <iconify-icon icon="heroicons:document" class="menu-icon"></iconify-icon>
-                    <span>Forms</span>
-                </a>
-                <ul class="sidebar-submenu">
-                    <li>
-                        <a href="form.php"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Input Forms</a>
-                    </li>
-                    <li>
-                        <a href="form-layout.php"><i class="ri-circle-fill circle-icon text-warning-600 w-auto"></i> Input Layout</a>
-                    </li>
-                    <li>
-                        <a href="form-validation.php"><i class="ri-circle-fill circle-icon text-success-600 w-auto"></i> Form Validation</a>
-                    </li>
-                    <li>
-                        <a href="wizard.php"><i class="ri-circle-fill circle-icon text-danger-600 w-auto"></i> Form Wizard</a>
-                    </li>
-                </ul>
-            </li>
-            <li class="dropdown">
-                <a href="javascript:void(0)">
-                    <iconify-icon icon="mingcute:storage-line" class="menu-icon"></iconify-icon>
-                    <span>Table</span>
-                </a>
-                <ul class="sidebar-submenu">
-                    <li>
-                        <a href="table-basic.php"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Basic Table</a>
-                    </li>
-                    <li>
-                        <a href="table-data.php"><i class="ri-circle-fill circle-icon text-warning-600 w-auto"></i> Data Table</a>
-                    </li>
-                </ul>
-            </li>
-            <li class="dropdown">
-                <a href="javascript:void(0)">
-                    <iconify-icon icon="solar:pie-chart-outline" class="menu-icon"></iconify-icon>
-                    <span>Chart</span>
-                </a>
-                <ul class="sidebar-submenu">
-                    <li>
-                        <a href="line-chart.php"><i class="ri-circle-fill circle-icon text-danger-600 w-auto"></i> Line Chart</a>
-                    </li>
-                    <li>
-                        <a href="column-chart.php"><i class="ri-circle-fill circle-icon text-warning-600 w-auto"></i> Column Chart</a>
-                    </li>
-                    <li>
-                        <a href="pie-chart.php"><i class="ri-circle-fill circle-icon text-success-600 w-auto"></i> Pie Chart</a>
-                    </li>
-                </ul>
-            </li>
-            <li>
-                <a href="widgets.php">
-                    <iconify-icon icon="fe:vector" class="menu-icon"></iconify-icon>
-                    <span>Widgets</span>
-                </a>
-            </li>
-            <li class="dropdown">
-                <a href="javascript:void(0)">
-                    <iconify-icon icon="flowbite:users-group-outline" class="menu-icon"></iconify-icon>
-                    <span>Users</span>
-                </a>
-                <ul class="sidebar-submenu">
-                    <li>
-                        <a href="users-list.php"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Users List</a>
-                    </li>
-                    <li>
-                        <a href="users-grid.php"><i class="ri-circle-fill circle-icon text-warning-600 w-auto"></i> Users Grid</a>
-                    </li>
-                    <li>
-                        <a href="add-user.php"><i class="ri-circle-fill circle-icon text-info-600 w-auto"></i> Add User</a>
-                    </li>
-                    <li>
-                        <a href="view-profile.php"><i class="ri-circle-fill circle-icon text-danger-600 w-auto"></i> View Profile</a>
-                    </li>
-                </ul>
-            </li>
-
-            <li class="sidebar-menu-group-title">Application</li>
-
-            <li class="dropdown">
-                <a href="javascript:void(0)">
-                    <iconify-icon icon="simple-line-icons:vector" class="menu-icon"></iconify-icon>
-                    <span>Authentication</span>
-                </a>
-                <ul class="sidebar-submenu">
-                    <li>
-                        <a href="sign-in.php"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Sign In</a>
-                    </li>
-                    <li>
-                        <a href="sign-up.php"><i class="ri-circle-fill circle-icon text-warning-600 w-auto"></i> Sign Up</a>
-                    </li>
-                    <li>
-                        <a href="forgot-password.php"><i class="ri-circle-fill circle-icon text-info-600 w-auto"></i> Forgot Password</a>
-                    </li>
-                </ul>
-            </li>
-            <li>
-                <a href="gallery.php">
-                    <iconify-icon icon="solar:gallery-wide-linear" class="menu-icon"></iconify-icon>
-                    <span>Gallery</span>
-                </a>
-            </li>
-            <li>
-                <a href="pricing.php">
-                    <iconify-icon icon="hugeicons:money-send-square" class="menu-icon"></iconify-icon>
-                    <span>Pricing</span>
-                </a>
-            </li>
-            <li>
-                <a href="faq.php">
-                    <iconify-icon icon="mage:message-question-mark-round" class="menu-icon"></iconify-icon>
-                    <span>FAQs.</span>
-                </a>
-            </li>
-            <li>
-                <a href="error.php">
-                    <iconify-icon icon="streamline:straight-face" class="menu-icon"></iconify-icon>
-                    <span>404</span>
-                </a>
-            </li>
-            <li>
-                <a href="terms-condition.php">
-                    <iconify-icon icon="octicon:info-24" class="menu-icon"></iconify-icon>
-                    <span>Terms & Conditions</span>
-                </a>
-            </li>
-            <li class="dropdown">
-                <a href="javascript:void(0)">
-                    <iconify-icon icon="icon-park-outline:setting-two" class="menu-icon"></iconify-icon>
-                    <span>Settings</span>
-                </a>
-                <ul class="sidebar-submenu">
-                    <li>
-                        <a href="company.php"><i class="ri-circle-fill circle-icon text-primary-600 w-auto"></i> Company</a>
-                    </li>
-                    <li>
-                        <a href="notification.php"><i class="ri-circle-fill circle-icon text-warning-600 w-auto"></i> Notification</a>
-                    </li>
-                    <li>
-                        <a href="notification-alert.php"><i class="ri-circle-fill circle-icon text-info-600 w-auto"></i> Notification Alert</a>
-                    </li>
-                    <li>
-                        <a href="theme.php"><i class="ri-circle-fill circle-icon text-danger-600 w-auto"></i> Theme</a>
-                    </li>
-                    <li>
-                        <a href="currencies.php"><i class="ri-circle-fill circle-icon text-danger-600 w-auto"></i> Currencies</a>
-                    </li>
-                    <li>
-                        <a href="language.php"><i class="ri-circle-fill circle-icon text-danger-600 w-auto"></i> Languages</a>
-                    </li>
-                    <li>
-                        <a href="payment-gateway.php"><i class="ri-circle-fill circle-icon text-danger-600 w-auto"></i> Payment Gateway</a>
-                    </li>
-                </ul>
-            </li>
-        </ul>
+    <div class="p-6 border-t border-slate-800/50">
+        <a href="logout.php" class="flex items-center gap-3 px-5 py-4 text-red-400 bg-red-400/5 hover:bg-red-400 hover:text-white rounded-2xl transition-all group font-bold">
+            <iconify-icon icon="solar:logout-3-bold-duotone" class="text-xl group-hover:translate-x-1 transition-transform"></iconify-icon>
+            <span class="text-sm">Logout</span>
+        </a>
     </div>
 </aside>
