@@ -1,101 +1,200 @@
 <?php 
-    session_start();
-    include '../include/config.php'; 
-    include '../include/db.php'; 
-    include '../include/auth.php';
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+    require_once '../include/db.php';
+    require_once '../include/auth.php';
+    require_once '../include/helper.php';
 
-    $title = 'Add User';
+    // Auth Check
+    if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
+        header("Location: ../sign-in.php");
+        exit();
+    }
+
+    $error = "";
+    $success = "";
+
+    // Add User Logic
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
+        $fullname = trim($_POST['fullname']);
+        $email = trim($_POST['email']);
+        $phone = trim($_POST['phone']);
+        $dept = trim($_POST['department']);
+        $desig = trim($_POST['designation']);
+        $status = trim($_POST['status']);
+        $password_raw = trim($_POST['password']);
+        $role = trim($_POST['role']);
+
+        if (empty($fullname) || empty($email) || empty($password_raw)) {
+            $error = "Please fill all required protocol fields.";
+        } else {
+            try {
+                $check = $conn->prepare("SELECT id FROM users WHERE email = ?");
+                $check->execute([$email]);
+                if ($check->rowCount() > 0) {
+                    $error = "This identity (email) already exists in our database.";
+                } else {
+                    $username = explode('@', $email)[0] . rand(10, 99);
+                    $hashed_password = password_hash($password_raw, PASSWORD_DEFAULT);
+                    
+                    $sql = "INSERT INTO users (fullname, email, phone, department, designation, status, username, password, role, created_at) 
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())";
+                    $stmt = $conn->prepare($sql);
+                    
+                    if ($stmt->execute([$fullname, $email, $phone, $dept, $desig, $status, $username, $hashed_password, $role])) {
+                        $success = "New identity authorized successfully!";
+                    } else {
+                        $error = "Protocol failure. Please re-authenticate and try again.";
+                    }
+                }
+            } catch (PDOException $e) {
+                $error = "System Error: " . $e->getMessage();
+            }
+        }
+    }
+
+    $title = 'Register Member | LUXURY ADMIN';
 ?>
 
-<?php include '../partials/header.php'; ?>
-
-<body class="bg-[#0f172a] font-sans text-white antialiased">
-    <div class="flex min-h-screen">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?= $title ?></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #020617; color: #94a3b8; overflow-x: hidden; }
         
-        <?php include '../partials/sidebar.php'; ?>
+        /* Premium Background Glooms */
+        .lux-orb-1 { position: absolute; top: -10%; left: -10%; width: 500px; height: 500px; background: radial-gradient(circle, rgba(59,130,246,0.12) 0%, rgba(0,0,0,0) 70%); border-radius: 50%; z-index: -1; filter: blur(80px); }
+        .lux-orb-2 { position: absolute; bottom: -5%; right: -5%; width: 600px; height: 600px; background: radial-gradient(circle, rgba(147,51,234,0.08) 0%, rgba(0,0,0,0) 70%); border-radius: 50%; z-index: -1; filter: blur(60px); }
+
+        .main-content { width: 100%; max-width: 1000px; margin: 0 auto; min-height: 100vh; padding: 4rem 2rem; position: relative; z-index: 10; }
         
-
-        <main class="flex-1 ml-72 bg-[#0f172a]">
-            <div class="flex justify-between items-center p-6 border-b border-slate-800 bg-[#1e293b]/20">
-                <h1 class="text-xl font-bold tracking-tight">Add User</h1>
-                <div class="flex items-center gap-2 text-xs text-slate-400">
-                    <iconify-icon icon="solar:home-smile-angle-outline"></iconify-icon>
-                    <span>Dashboard</span>
-                    <span>-</span>
-                    <span class="text-blue-500">Add User</span>
-                </div>
-            </div>
-
-            <div class="max-w-4xl mx-auto p-10">
-                <div class="bg-[#1e293b]/40 border border-slate-800 rounded-xl p-10 shadow-xl">
-                    
-                    <form action="process_user.php" method="POST" enctype="multipart/form-data" class="space-y-8">
-                        
-                        <div class="flex flex-col items-center mb-10">
-                            <label class="text-slate-400 text-sm font-bold uppercase tracking-widest mb-4">Profile Image</label>
-                            <div class="relative group">
-                                <div class="w-36 h-36 rounded-full bg-slate-700 border-4 border-slate-800 overflow-hidden flex items-center justify-center relative">
-                                    <img id="preview" src="https://via.placeholder.com/150" class="w-full h-full object-cover opacity-60">
-                                    <div class="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
-                                        <iconify-icon icon="solar:camera-linear" class="text-3xl"></iconify-icon>
-                                    </div>
-                                </div>
-                                <input type="file" name="profile_image" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onchange="previewImage(event)">
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 gap-6">
-                            <div class="flex flex-col gap-2">
-                                <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Full Name *</label>
-                                <input type="text" name="fullname" placeholder="Enter Full Name" required
-                                    class="bg-[#0f172a] border border-slate-700 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all placeholder:text-slate-600">
-                            </div>
-
-                            <div class="flex flex-col gap-2">
-                                <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Email *</label>
-                                <input type="email" name="email" placeholder="Enter email address" required
-                                    class="bg-[#0f172a] border border-slate-700 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all placeholder:text-slate-600">
-                            </div>
-
-                            <div class="flex flex-col gap-2">
-                                <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Phone</label>
-                                <input type="text" name="phone" placeholder="Enter phone number" 
-                                    class="bg-[#0f172a] border border-slate-700 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all placeholder:text-slate-600">
-                            </div>
-
-                            <div class="flex flex-col gap-2">
-                                <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Department *</label>
-                                <select name="department" required
-                                    class="bg-[#0f172a] border border-slate-700 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-blue-500 transition-all text-slate-300">
-                                    <option value="">Enter Event Title</option> <option value="IT">IT Department</option>
-                                    <option value="Sales">Sales</option>
-                                    <option value="Marketing">Marketing</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="pt-4">
-                            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-lg shadow-lg shadow-blue-900/20 transition-all uppercase tracking-widest text-xs">
-                                Create New User
-                            </button>
-                        </div>
-
-                    </form>
-                </div>
-            </div>
-        </main>
-    </div>
-
-    <script>
-        function previewImage(event) {
-            var reader = new FileReader();
-            reader.onload = function() {
-                var output = document.getElementById('preview');
-                output.src = reader.result;
-                output.style.opacity = "1";
-            }
-            reader.readAsDataURL(event.target.files[0]);
+        .lux-container {
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 3rem;
+            box-shadow: 0 40px 100px -20px rgba(0,0,0,0.8);
+            animation: fadeIn 0.8s ease;
         }
-    </script>
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .lux-input { 
+            background: rgba(2, 6, 23, 0.6); border: 1px solid #1e293b; border-radius: 1.25rem; 
+            padding: 1.25rem 1.5rem; color: white; transition: 0.3s; width: 100%; outline: none;
+        }
+        .lux-input:focus { border-color: #3b82f6; box-shadow: 0 0 0 5px rgba(59, 130, 246, 0.1); }
+        
+        .btn-premium { 
+            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%); color: white; 
+            padding: 1.25rem 2.5rem; border-radius: 1.5rem; font-weight: 800; transition: 0.4s; 
+            box-shadow: 0 20px 40px -10px rgba(37, 99, 235, 0.4);
+            text-transform: uppercase; letter-spacing: 0.1em; italic: true;
+        }
+        .btn-premium:hover { transform: translateY(-3px); opacity: 0.9; }
+    </style>
+</head>
+<body class="antialiased selection:bg-blue-500/30">
+
+    <div class="lux-orb-1"></div>
+    <div class="lux-orb-2"></div>
+
+    <main class="main-content">
+        
+        <header class="mb-12 text-center">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 bg-blue-600/10 border border-blue-600/20 rounded-full mb-6">
+                <span class="w-1.5 h-1.5 rounded-full bg-blue-500 shadow-[0_0_8px_#3b82f6]"></span>
+                <span class="text-[10px] font-black uppercase tracking-widest text-blue-400">Security Protocol</span>
+            </div>
+            <h2 class="text-5xl font-black text-white uppercase tracking-tighter italic leading-none mb-3">Add Identity</h2>
+            <p class="text-slate-500 font-medium opacity-80 uppercase text-[10px] tracking-[0.4em]">Authorized Personnel Registration</p>
+        </header>
+
+        <div class="lux-container p-10 md:p-16">
+            
+            <?php if($error): ?>
+                <div class="bg-red-500/10 border border-red-500/20 text-red-500 p-5 rounded-2xl mb-10 text-xs font-bold flex items-center gap-3">
+                    <iconify-icon icon="solar:danger-bold-duotone" class="text-2xl"></iconify-icon>
+                    <?= $error ?>
+                </div>
+            <?php endif; ?>
+
+            <?php if($success): ?>
+                <div class="bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 p-5 rounded-2xl mb-10 text-xs font-bold flex items-center gap-3">
+                    <iconify-icon icon="solar:check-circle-bold-duotone" class="text-2xl"></iconify-icon>
+                    <?= $success ?>
+                </div>
+            <?php endif; ?>
+
+            <form action="add.php" method="POST" enctype="multipart/form-data" class="space-y-12">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                    <div class="space-y-3">
+                        <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-2">Full Legal Name</label>
+                        <input type="text" name="fullname" class="lux-input" placeholder="Sumit Singh" required>
+                    </div>
+                    <div class="space-y-3">
+                        <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-2">Secure Email Identity</label>
+                        <input type="email" name="email" class="lux-input" placeholder="sumit@modest.mission" required>
+                    </div>
+                    <div class="space-y-3">
+                        <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-2">Verified Phone Number</label>
+                        <input type="text" name="phone" class="lux-input" placeholder="+91 99999 99999">
+                    </div>
+                    <div class="space-y-3">
+                        <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-2">Department Node</label>
+                        <select name="department" class="lux-input appearance-none">
+                            <option value="Management">Global Management</option>
+                            <option value="Sales">Premium Sales</option>
+                            <option value="IT Department">Infrastructure Logic</option>
+                            <option value="Marketing">Growth Protocol</option>
+                        </select>
+                    </div>
+                    <div class="space-y-3">
+                        <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-2">Security Authorization</label>
+                        <select name="role" class="lux-input">
+                            <option value="user">Standard Agent</option>
+                            <option value="admin">Principal Admin</option>
+                        </select>
+                    </div>
+                    <div class="space-y-3">
+                        <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-2">Master Password</label>
+                        <input type="password" name="password" class="lux-input" placeholder="••••••••" required>
+                    </div>
+                    <div class="space-y-3">
+                        <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-2">Protocol Designation</label>
+                        <input type="text" name="designation" class="lux-input" placeholder="Elite Consultant">
+                    </div>
+                    <div class="space-y-3">
+                        <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-2">Account Status</label>
+                        <select name="status" class="lux-input">
+                            <option value="active">Active Layer</option>
+                            <option value="inactive">Encrypted/Inactive</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="pt-10 border-t border-slate-800 flex flex-col md:flex-row items-center justify-between gap-8">
+                    <a href="index.php" class="text-[10px] font-black text-slate-500 uppercase tracking-widest hover:text-white transition-all">
+                        <iconify-icon icon="solar:alt-arrow-left-linear" class="align-middle mr-1"></iconify-icon> Revoke & Dismiss
+                    </a>
+                    <button type="submit" name="submit" class="btn-premium w-full md:w-auto">
+                        Authorize Identity
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <footer class="mt-12 text-center text-[9px] font-black uppercase text-slate-700 tracking-[0.5em] italic">
+            Secure Member Registration Protocol v.03
+        </footer>
+    </main>
+
 </body>
 </html>

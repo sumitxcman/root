@@ -54,35 +54,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_product'])) {
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #0b1121; color: #94a3b8; font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; }
-        .sidebar { width: 260px; height: 100vh; background-color: #111827; position: fixed; left: 0; top: 0; border-right: 1px solid #1e293b; z-index: 100; }
-        .main-content { margin-left: 260px; width: calc(100% - 260px); min-height: 100vh; }
-        .lux-card { background: #1e293b; border-radius: 24px; padding: 30px; border: 1px solid rgba(255,255,255,0.05); }
+        body { background-color: #020617; color: #94a3b8; font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; }
+        .main-content { width: 100%; max-width: 1200px; margin: 0 auto; min-height: 100vh; padding: 4rem 2rem; }
+        .lux-card { background: #0f172a; border-radius: 24px; padding: 30px; border: 1px solid rgba(255,255,255,0.05); }
         .lux-input { width: 100%; background: #0f172a; border: 1px solid #334155; border-radius: 12px; padding: 14px; color: white; outline: none; transition: 0.3s; }
         .lux-input:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
     </style>
 </head>
-<body class="flex overflow-x-hidden">
-
-    <aside class="sidebar p-6 flex flex-col">
-        <div class="flex items-center gap-3 mb-10 px-2">
-            <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-600/20">
-                <iconify-icon icon="solar:shop-bold-duotone" class="text-2xl text-white"></iconify-icon>
-            </div>
-            <h1 class="text-white text-xl font-black tracking-tighter uppercase">MY SHOP</h1>
-        </div>
-        <nav class="space-y-4">
-            <a href="../dashboard.php" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-slate-400 hover:text-white hover:bg-slate-800 transition-all">
-                <iconify-icon icon="solar:widget-5-bold-duotone" class="text-xl"></iconify-icon> Dashboard
-            </a>
-            <a href="index.php" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-slate-400 hover:text-white hover:bg-slate-800 transition-all">
-                <iconify-icon icon="solar:box-bold-duotone" class="text-xl"></iconify-icon> View Catalog
-            </a>
-            <a href="add.php" class="flex items-center gap-3 px-4 py-3 bg-blue-500 text-white rounded-xl text-sm font-bold shadow-lg shadow-blue-500/20 transition-all">
-                <iconify-icon icon="solar:add-circle-bold" class="text-xl"></iconify-icon> Add Product
-            </a>
-        </nav>
-    </aside>
+<body class="antialiased">
 
     <div class="main-content p-10">
         <form method="POST" enctype="multipart/form-data" class="max-w-5xl mx-auto">

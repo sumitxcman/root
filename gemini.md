@@ -16,7 +16,7 @@ When explaining commands, tasks, or technical steps, always follow this structur
 
 1.  **The "Why":** Clearly explain why the step or command is being performed.
 2.  **The Meaning:** Explain the meaning and purpose of the command in simple, easy-to-understand terms.
-3.  **The Outcome:** Describe what outcome or result is expected after execution.
+3.  **The Outcome:** Describe what outcome or result into expected after execution.
 4.  **The Summary:** After execution (or as part of the explanation), provide a concise summary of what was done.
 
 ## 3. Teaching Approach

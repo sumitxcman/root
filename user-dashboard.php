@@ -105,13 +105,35 @@ try {
                         </div>
                     </a>
 
-                    <a href="#" class="glass-card hover:border-emerald-500 transition-all flex items-center gap-4 group cursor-pointer">
+                    <a href="profile.php" class="glass-card hover:border-emerald-500 transition-all flex items-center gap-4 group cursor-pointer">
                         <div class="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-500 group-hover:scale-110 transition-transform">
                             <iconify-icon icon="solar:settings-bold" class="text-2xl"></iconify-icon>
                         </div>
                         <div>
                             <h4 class="text-white font-bold text-sm">Account Settings</h4>
                             <p class="text-xs text-slate-500">Update your profile</p>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <a href="faq.php" class="glass-card hover:border-amber-500 transition-all flex items-center gap-4 group cursor-pointer">
+                        <div class="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-500 group-hover:scale-110 transition-transform">
+                            <iconify-icon icon="solar:question-square-bold" class="text-2xl"></iconify-icon>
+                        </div>
+                        <div>
+                            <h4 class="text-white font-bold text-sm">Help Center</h4>
+                            <p class="text-xs text-slate-500">FAQs & Support</p>
+                        </div>
+                    </a>
+
+                    <a href="terms.php" class="glass-card hover:border-slate-500 transition-all flex items-center gap-4 group cursor-pointer">
+                        <div class="w-12 h-12 rounded-xl bg-slate-500/10 flex items-center justify-center text-slate-500 group-hover:scale-110 transition-transform">
+                            <iconify-icon icon="solar:document-text-bold" class="text-2xl"></iconify-icon>
+                        </div>
+                        <div>
+                            <h4 class="text-white font-bold text-sm">Terms & Privacy</h4>
+                            <p class="text-xs text-slate-500">Legal Agreement</p>
                         </div>
                     </a>
                 </div>

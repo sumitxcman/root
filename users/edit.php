@@ -1,123 +1,169 @@
 <?php 
-    session_start();
-    include '../include/config.php'; 
-    include '../include/db.php'; 
-    include '../include/auth.php';
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+    require_once '../include/db.php';
+    require_once '../include/auth.php';
+    require_once '../include/helper.php';
 
-    // URL se ID lena
-    $id = isset($_GET['id']) ? $_GET['id'] : null;
-    $user_data = null;
-
-    if ($id) {
-        // Database se user ka purana data nikalna
-        $query = "SELECT * FROM users WHERE id = ?";
-        $stmt = $conn->prepare($query);
-        $stmt->execute([$id]);
-        $user_data = $stmt->fetch();
+    // Auth Check
+    if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
+        header("Location: ../sign-in.php");
+        exit();
     }
 
-    if (!$user_data) {
-        die("User not found!");
+    $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+    $error = "";
+    $success = "";
+
+    // Fetch User Data
+    $stmt = $conn->prepare("SELECT * FROM users WHERE id = ?");
+    $stmt->execute([$id]);
+    $user = $stmt->fetch();
+
+    if (!$user) {
+        header("Location: index.php");
+        exit();
     }
 
-    $title = 'Edit User';
+    // Update User Logic
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
+        $fullname = trim($_POST['fullname']);
+        $email = trim($_POST['email']);
+        $phone = trim($_POST['phone']);
+        $dept = trim($_POST['department']);
+        $desig = trim($_POST['designation']);
+        $status = trim($_POST['status']);
+        $role = trim($_POST['role']);
+        $new_password = trim($_POST['password']);
+
+        if (empty($fullname) || empty($email)) {
+            $error = "Name and Email are required.";
+        } else {
+            try {
+                // Determine update query based on if password is provided
+                if (!empty($new_password)) {
+                    $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
+                    $sql = "UPDATE users SET fullname = ?, email = ?, phone = ?, department = ?, designation = ?, status = ?, role = ?, password = ? WHERE id = ?";
+                    $params = [$fullname, $email, $phone, $dept, $desig, $status, $role, $hashed_password, $id];
+                } else {
+                    $sql = "UPDATE users SET fullname = ?, email = ?, phone = ?, department = ?, designation = ?, status = ?, role = ? WHERE id = ?";
+                    $params = [$fullname, $email, $phone, $dept, $desig, $status, $role, $id];
+                }
+
+                $update_stmt = $conn->prepare($sql);
+                if ($update_stmt->execute($params)) {
+                    $success = "User updated successfully!";
+                    // Refresh data
+                    $stmt->execute([$id]);
+                    $user = $stmt->fetch();
+                } else {
+                    $error = "Failed to update member.";
+                }
+            } catch (PDOException $e) {
+                $error = "Database Error: " . $e->getMessage();
+            }
+        }
+    }
+
+    $title = 'Edit Member - Modest Mission';
 ?>
 
-<?php include '../partials/header.php'; ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?= $title ?></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #020617; color: #94a3b8; }
+        .main-content { width: 100%; max-width: 1000px; margin: 0 auto; min-height: 100vh; padding: 4rem 2rem; }
+        .btn-lux { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 0.75rem 1.5rem; border-radius: 0.75rem; font-weight: 700; transition: 0.3s; border: none; cursor: pointer; }
+        .btn-lux:hover { transform: translateY(-2px); box-shadow: 0 10px 20px -5px rgba(37, 99, 235, 0.4); }
+    </style>
+</head>
+<body class="antialiased">
 
-<body class="bg-[#0f172a] font-sans text-white antialiased">
-    <div class="flex min-h-screen">
-        
-        <?php include '../partials/sidebar.php'; ?>
-
-        <main class="flex-1 ml-72 bg-[#0f172a]">
-            <div class="flex justify-between items-center p-6 border-b border-slate-800 bg-[#1e293b]/20">
-                <h1 class="text-xl font-bold tracking-tight">Edit User</h1>
-                <div class="flex items-center gap-2 text-xs text-slate-400">
-                    <iconify-icon icon="solar:home-smile-angle-outline"></iconify-icon>
-                    <span>Dashboard</span>
-                    <span>-</span>
-                    <span class="text-blue-500">Edit User</span>
+    <main class="main-content">
+        <div class="max-w-4xl mx-auto">
+            <div class="flex justify-between items-center mb-8">
+                <div>
+                    <h2 class="text-3xl font-black text-white uppercase tracking-tighter">Edit Member</h2>
+                    <p class="text-slate-500 mt-1">Update details for <span class="text-blue-500 font-bold"><?= htmlspecialchars($user['fullname']) ?></span></p>
                 </div>
             </div>
 
-            <div class="max-w-4xl mx-auto p-10">
-                <div class="bg-[#1e293b]/40 border border-slate-800 rounded-xl p-10 shadow-xl">
-                    
-                    <form action="update_user.php" method="POST" enctype="multipart/form-data" class="space-y-8">
-                        <input type="hidden" name="user_id" value="<?= $user_data['id'] ?>">
-
-                        <div class="flex flex-col items-center mb-10">
-                            <label class="text-slate-400 text-sm font-bold uppercase tracking-widest mb-4">Current Profile Image</label>
-                            <div class="relative group">
-                                <div class="w-36 h-36 rounded-full bg-slate-700 border-4 border-slate-800 overflow-hidden flex items-center justify-center relative shadow-2xl">
-                                    <?php 
-                                        $img_path = !empty($user_data['image']) ? "../assets/images/users/".$user_data['image'] : "https://via.placeholder.com/150";
-                                    ?>
-                                    <img id="preview" src="<?= $img_path ?>" class="w-full h-full object-cover">
-                                    <div class="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
-                                        <iconify-icon icon="solar:pen-new-square-linear" class="text-3xl text-white"></iconify-icon>
-                                    </div>
-                                </div>
-                                <input type="file" name="profile_image" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onchange="previewImage(event)">
-                            </div>
-                            <p class="text-[10px] text-slate-500 mt-3 uppercase tracking-tighter">Click image to change</p>
-                        </div>
-
-                        <div class="grid grid-cols-1 gap-6">
-                            <div class="flex flex-col gap-2">
-                                <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Full Name *</label>
-                                <input type="text" name="fullname" value="<?= htmlspecialchars($user_data['fullname']) ?>" required
-                                    class="bg-[#0f172a] border border-slate-700 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all">
-                            </div>
-
-                            <div class="flex flex-col gap-2">
-                                <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Email *</label>
-                                <input type="email" name="email" value="<?= htmlspecialchars($user_data['email']) ?>" required
-                                    class="bg-[#0f172a] border border-slate-700 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all">
-                            </div>
-
-                            <div class="flex flex-col gap-2">
-                                <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Phone</label>
-                                <input type="text" name="phone" value="<?= htmlspecialchars($user_data['phone']) ?>"
-                                    class="bg-[#0f172a] border border-slate-700 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all">
-                            </div>
-
-                            <div class="flex flex-col gap-2">
-                                <label class="text-xs font-bold text-slate-400 uppercase tracking-wider">Department *</label>
-                                <select name="department" required
-                                    class="bg-[#0f172a] border border-slate-700 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-blue-500 transition-all text-slate-300">
-                                    <option value="IT" <?= $user_data['department'] == 'IT' ? 'selected' : '' ?>>IT Department</option>
-                                    <option value="Sales" <?= $user_data['department'] == 'Sales' ? 'selected' : '' ?>>Sales</option>
-                                    <option value="Marketing" <?= $user_data['department'] == 'Marketing' ? 'selected' : '' ?>>Marketing</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="pt-4 flex gap-4">
-                            <a href="users-list.php" class="flex-1 bg-slate-800 hover:bg-slate-700 text-white text-center font-bold py-4 rounded-lg transition-all uppercase tracking-widest text-xs">
-                                Cancel
-                            </a>
-                            <button type="submit" class="flex-[2] bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-lg shadow-lg shadow-blue-900/20 transition-all uppercase tracking-widest text-xs">
-                                Save Changes
-                            </button>
-                        </div>
-
-                    </form>
+            <?php if($error): ?>
+                <div class="bg-red-500/10 border border-red-500/20 text-red-500 p-4 rounded-xl mb-6 text-sm font-bold flex items-center gap-3">
+                    <iconify-icon icon="solar:danger-bold" class="text-xl"></iconify-icon>
+                    <?= $error ?>
                 </div>
-            </div>
-        </main>
-    </div>
+            <?php endif; ?>
 
-    <script>
-        function previewImage(event) {
-            var reader = new FileReader();
-            reader.onload = function() {
-                var output = document.getElementById('preview');
-                output.src = reader.result;
-            }
-            reader.readAsDataURL(event.target.files[0]);
-        }
-    </script>
+            <?php if($success): ?>
+                <div class="bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 p-4 rounded-xl mb-6 text-sm font-bold flex items-center gap-3">
+                    <iconify-icon icon="solar:check-circle-bold" class="text-xl"></iconify-icon>
+                    <?= $success ?>
+                </div>
+            <?php endif; ?>
+
+            <form action="edit.php?id=<?= $id ?>" method="POST" class="lux-card p-10 space-y-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest px-1">Full Name</label>
+                        <input type="text" name="fullname" class="lux-input" value="<?= htmlspecialchars($user['fullname']) ?>" required>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest px-1">Email Address</label>
+                        <input type="email" name="email" class="lux-input" value="<?= htmlspecialchars($user['email']) ?>" required>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest px-1">Phone Number</label>
+                        <input type="text" name="phone" class="lux-input" value="<?= htmlspecialchars($user['phone'] ?? '') ?>">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest px-1">Department</label>
+                        <select name="department" class="lux-input">
+                            <option value="Management" <?= $user['department'] == 'Management' ? 'selected' : '' ?>>Management</option>
+                            <option value="Sales" <?= $user['department'] == 'Sales' ? 'selected' : '' ?>>Sales</option>
+                            <option value="IT Department" <?= $user['department'] == 'IT Department' ? 'selected' : '' ?>>IT Department</option>
+                            <option value="Marketing" <?= $user['department'] == 'Marketing' ? 'selected' : '' ?>>Marketing</option>
+                        </select>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest px-1">Designation</label>
+                        <input type="text" name="designation" class="lux-input" value="<?= htmlspecialchars($user['designation'] ?? '') ?>">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest px-1">Account Role</label>
+                        <select name="role" class="lux-input">
+                            <option value="user" <?= $user['role'] == 'user' ? 'selected' : '' ?>>Standard User</option>
+                            <option value="admin" <?= $user['role'] == 'admin' ? 'selected' : '' ?>>Administrator</option>
+                        </select>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest px-1">Password (Leave blank to keep same)</label>
+                        <input type="password" name="password" class="lux-input" placeholder="••••••••">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest px-1">Status</label>
+                        <select name="status" class="lux-input">
+                            <option value="active" <?= $user['status'] == 'active' ? 'selected' : '' ?>>Active</option>
+                            <option value="inactive" <?= $user['status'] == 'inactive' ? 'selected' : '' ?>>Inactive</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="border-t border-slate-800 pt-8 flex justify-end gap-4">
+                    <a href="index.php" class="px-6 py-3 text-slate-400 hover:text-white font-bold transition-all">Back to List</a>
+                    <button type="submit" name="submit" class="btn-lux">Update Member</button>
+                </div>
+            </form>
+        </div>
+    </main>
+
 </body>
 </html>
