@@ -53,11 +53,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Account | MY SHOP Admin</title>
+    <title>Create Account | MODEST MISSION Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        html { font-size: 14px; /* Global scale down */ }
         body { font-family: 'Poppins', sans-serif; background-color: #020617; color: white; overflow: hidden; }
         /* Background Glows */
         .glow-circle-1 { position: absolute; width: 400px; height: 400px; background: radial-gradient(circle, rgba(147,51,234,0.3) 0%, rgba(0,0,0,0) 70%); top: -100px; right: -100px; border-radius: 50%; z-index: -1; }

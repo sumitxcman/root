@@ -15,6 +15,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
     <style>
+        html { font-size: 14px; /* Global scale down */ }
         body { background-color: #0b1121; color: #94a3b8; font-family: 'Inter', sans-serif; overflow: hidden; }
         .sidebar { width: 280px; background-color: #0f172a; border-right: 1px solid rgba(255,255,255,0.05); }
         .card-gate { background: #1e293b; border-radius: 20px; padding: 30px; border: 1px solid rgba(255,255,255,0.05); }
@@ -37,7 +38,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
             <div style="width: 40px; height: 40px; background: #3b82f6; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
                 <iconify-icon icon="solar:shop-2-bold" class="text-white text-2xl"></iconify-icon>
             </div>
-            <span class="text-white text-xl font-black italic uppercase tracking-tighter">MY SHOP</span>
+            <span class="text-white text-xl font-black italic uppercase tracking-tighter">MODEST MISSION</span>
         </div>
 
         <nav class="flex-1 space-y-2">

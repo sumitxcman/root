@@ -17,6 +17,9 @@ $total_users = $conn->query("SELECT COUNT(*) FROM users")->fetchColumn();
 $total_products = $conn->query("SELECT COUNT(*) FROM products")->fetchColumn();
 $total_revenue = $conn->query("SELECT SUM(total_amount) FROM orders")->fetchColumn() ?? 0;
 $total_orders = $conn->query("SELECT COUNT(*) FROM orders")->fetchColumn();
+
+// Low Stock Alert (Real-time)
+$low_stock_items = $conn->query("SELECT name, stock FROM products WHERE stock <= 5 ORDER BY stock ASC LIMIT 5")->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -28,8 +31,9 @@ $total_orders = $conn->query("SELECT COUNT(*) FROM orders")->fetchColumn();
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
+        html { font-size: 12px; /* Global scale down */ }
         body { background-color: #020617; color: #94a3b8; font-family: 'Plus Jakarta Sans', sans-serif; }
-        .main-content { margin-left: 280px; min-height: 100vh; padding: 2.5rem; }
+        .main-content { margin-left: 19rem; min-height: 100vh; padding: 2rem; }
         .stat-card { background: #0f172a; border-radius: 20px; padding: 1.5rem; border: 1px solid #1e293b; transition: 0.3s; }
         .stat-card:hover { transform: translateY(-5px); border-color: #3b82f6; }
         .lux-chart-bg { background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(30, 41, 59, 0) 100%); }
@@ -43,7 +47,7 @@ $total_orders = $conn->query("SELECT COUNT(*) FROM orders")->fetchColumn();
         <!-- Top Navbar -->
         <header class="flex justify-between items-center mb-10">
             <div>
-                <h1 class="text-3xl font-black text-white tracking-tighter uppercase italic">MY SHOP</h1>
+                <h1 class="text-2xl font-black text-white tracking-tighter uppercase italic">MODEST MISSION</h1>
                 <p class="text-slate-500 text-sm mt-1">Real-time performance metrics for your enterprise.</p>
             </div>
             
@@ -69,7 +73,7 @@ $total_orders = $conn->query("SELECT COUNT(*) FROM orders")->fetchColumn();
                     <span class="text-[10px] font-black text-emerald-500">+12% vs LW</span>
                 </div>
                 <div>
-                    <h2 class="text-3xl font-black text-white"><?= $total_users ?></h2>
+                    <h2 class="text-2xl font-black text-white"><?= $total_users ?></h2>
                     <p class="text-[10px] uppercase font-black text-slate-500 tracking-widest mt-1">Customer Base</p>
                 </div>
             </div>
@@ -82,7 +86,7 @@ $total_orders = $conn->query("SELECT COUNT(*) FROM orders")->fetchColumn();
                     <span class="text-[10px] font-black text-emerald-500">+5% Growth</span>
                 </div>
                 <div>
-                    <h2 class="text-3xl font-black text-white">₹<?= number_format($total_revenue) ?></h2>
+                    <h2 class="text-2xl font-black text-white">₹<?= number_format($total_revenue) ?></h2>
                     <p class="text-[10px] uppercase font-black text-slate-500 tracking-widest mt-1">Net Revenue</p>
                 </div>
             </div>
@@ -95,7 +99,7 @@ $total_orders = $conn->query("SELECT COUNT(*) FROM orders")->fetchColumn();
                     <span class="text-[10px] font-black text-slate-500">Active Pipeline</span>
                 </div>
                 <div>
-                    <h2 class="text-3xl font-black text-white"><?= $total_orders ?></h2>
+                    <h2 class="text-2xl font-black text-white"><?= $total_orders ?></h2>
                     <p class="text-[10px] uppercase font-black text-slate-500 tracking-widest mt-1">Order Volume</p>
                 </div>
             </div>
@@ -108,7 +112,7 @@ $total_orders = $conn->query("SELECT COUNT(*) FROM orders")->fetchColumn();
                     <span class="text-[10px] font-black text-blue-500">Skus</span>
                 </div>
                 <div>
-                    <h2 class="text-3xl font-black text-white"><?= $total_products ?></h2>
+                    <h2 class="text-2xl font-black text-white"><?= $total_products ?></h2>
                     <p class="text-[10px] uppercase font-black text-slate-500 tracking-widest mt-1">Global Inventory</p>
                 </div>
             </div>
@@ -189,6 +193,36 @@ $total_orders = $conn->query("SELECT COUNT(*) FROM orders")->fetchColumn();
                 <a href="orders.php" class="w-full mt-10 flex items-center justify-center gap-2 border border-slate-800 hover:border-blue-500 hover:text-white py-4 rounded-xl text-xs font-bold uppercase tracking-widest transition-all">
                     View full activity
                 </a>
+            </div>
+
+            <!-- Global Inventory Alert Widget -->
+            <div class="bg-[#0f172a] rounded-[2rem] border border-red-500/20 p-8 shadow-2xl shadow-red-500/5 relative overflow-hidden">
+                <div class="absolute -top-10 -right-10 w-32 h-32 bg-red-600/5 rounded-full blur-3xl"></div>
+                <h3 class="text-xl font-black text-white uppercase tracking-tighter mb-6 flex items-center gap-3">
+                    <iconify-icon icon="solar:shield-warning-bold-duotone" class="text-red-500 text-3xl"></iconify-icon> Inventory Alerts
+                </h3>
+                
+                <div class="space-y-4">
+                    <?php if(empty($low_stock_items)): ?>
+                        <div class="py-4 text-center">
+                            <p class="text-xs font-bold text-emerald-500 uppercase tracking-widest italic">All stock levels healthy</p>
+                        </div>
+                    <?php else: ?>
+                        <?php foreach($low_stock_items as $item): ?>
+                            <div class="flex items-center justify-between p-4 bg-red-500/5 border border-red-500/10 rounded-2xl">
+                                <div>
+                                    <p class="text-xs font-black text-white uppercase italic tracking-tighter"><?= htmlspecialchars($item['name']) ?></p>
+                                    <p class="text-[9px] text-red-400 font-bold uppercase tracking-widest mt-1">Critical: Action Required</p>
+                                </div>
+                                <div class="text-right">
+                                    <span class="text-xl font-black text-red-500"><?= $item['stock'] ?></span>
+                                    <p class="text-[8px] text-slate-500 font-bold uppercase">Left</p>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                        <a href="products/index.php" class="mt-4 block text-center text-[9px] font-black text-slate-500 hover:text-white uppercase tracking-[0.3em] transition-all">Restock Inventory</a>
+                    <?php endif; ?>
+                </div>
             </div>
 
         </div>

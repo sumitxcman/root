@@ -50,10 +50,15 @@ if ($payment_status === 'succeeded' && !empty($_SESSION['cart'])) {
             $stmt->execute([$_SESSION['user_id'], $total]);
             $order_id = $conn->lastInsertId();
 
-            // Store items with mapped correct pricing
+            // Store items with mapped correct pricing & REDUCE STOCK
             foreach ($order_items as $item) {
+                // 1. Insert into order_items
                 $item_stmt = $conn->prepare("INSERT INTO order_items (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?)");
                 $item_stmt->execute([$order_id, $item['id'], $item['qty'], $item['price']]);
+
+                // 2. Decrement Stock centrally
+                $stock_stmt = $conn->prepare("UPDATE products SET stock = stock - ? WHERE id = ?");
+                $stock_stmt->execute([$item['qty'], $item['id']]);
             }
         }
         // Clear the cart successfully!
@@ -66,13 +71,14 @@ if ($payment_status === 'succeeded' && !empty($_SESSION['cart'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment Success | MY SHOP</title>
+    <title>Payment Success | MODEST MISSION</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #0b1121; color: #94a3b8; font-family: 'Plus Jakarta Sans', sans-serif; }
-        .glass-card { background: #1e293b; border-radius: 16px; padding: 32px; border: 1px solid rgba(255,255,255,0.05); }
+        html { font-size: 14px; /* Global scale down */ }
+        body { background-color: #020617; color: #94a3b8; font-family: 'Plus Jakarta Sans', sans-serif; overflow: hidden; }
+        .glass-card { background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(40px); border-radius: 3rem; padding: 3rem; border: 1px solid rgba(255,255,255,0.05); }
     </style>
 </head>
 <body class="flex items-center justify-center min-h-screen p-4">
@@ -103,6 +109,7 @@ if ($payment_status === 'succeeded' && !empty($_SESSION['cart'])) {
     
     <!-- Micro-animation scale up -->
     <style>
+        html { font-size: 14px; /* Global scale down */ }
         @keyframes scaleUp {
             from { transform: scale(0.9); opacity: 0; }
             to { transform: scale(1); opacity: 1; }

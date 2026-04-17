@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MY SHOP - Management</title>
+    <title>MODEST MISSION - Management</title>
     
     <link rel="icon" type="image/png" href="assets/images/favicon.png">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -12,6 +12,7 @@
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
 
     <style>
+        html { font-size: 12px; /* Global scale down */ }
         /* Body background ko dark kiya gaya hai taake white box na dikhe */
         body { 
             font-family: 'Plus Jakarta Sans', sans-serif; 
@@ -40,7 +41,7 @@
 <aside class="sidebar">
     <div class="p-6 border-b border-gray-800">
         <a href="index.php" class="flex items-center gap-2">
-            <h4 class="text-white font-bold mb-0 uppercase tracking-wider">MY SHOP</h4>
+            <h4 class="text-white font-bold mb-0 uppercase tracking-wider">MODEST MISSION</h4>
         </a>
     </div>
     <ul class="sidebar-menu mt-4">

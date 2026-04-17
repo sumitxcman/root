@@ -5,11 +5,12 @@ http_response_code(404);
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>404 - Page Not Found | MY SHOP</title>
+    <title>404 - Page Not Found | MODEST MISSION</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
+        html { font-size: 14px; /* Global scale down */ }
         body { background-color: #020617; color: #94a3b8; font-family: 'Outfit', sans-serif; overflow: hidden; }
         .glitch-text { text-shadow: 2px 0 #3b82f6, -2px 0 #ef4444; animation: glitch 2s infinite linear alternate-reverse; }
         @keyframes glitch {

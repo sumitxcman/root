@@ -58,8 +58,9 @@ function getStatusBadge($status) {
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        html { font-size: 12px; /* Global scale down */ }
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #020617; color: #94a3b8; }
-        .main-content { margin-left: 280px; min-height: 100vh; padding: 2.5rem; }
+        .main-content { margin-left: 19rem; min-height: 100vh; padding: 2rem; }
         .table-container { background: #0f172a; border-radius: 20px; border: 1px solid #1e293b; overflow: hidden; }
         .table-row:hover { background: rgba(255,255,255,0.02); }
         .input-dark { background: #020617; border: 1px solid #1e293b; color: white; border-radius: 12px; padding: 10px 16px; outline: none; transition: 0.3s; }
@@ -74,7 +75,7 @@ function getStatusBadge($status) {
         <!-- Header -->
         <header class="mb-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
             <div>
-                <h2 class="text-3xl font-black text-white tracking-tighter uppercase italic">Customer Orders</h2>
+                <h2 class="text-2xl font-black text-white tracking-tighter uppercase italic">Customer Orders</h2>
                 <p class="text-slate-500 text-sm mt-1">Manage and track your global commerce transactions.</p>
             </div>
             

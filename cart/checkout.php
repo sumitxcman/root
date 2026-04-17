@@ -31,11 +31,12 @@ if ($total <= 0) {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Exclusive Checkout | MY SHOP</title>
+    <title>Exclusive Checkout | MODEST MISSION</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        html { font-size: 14px; /* Global scale down */ }
         body { background-color: #020617; color: #94a3b8; font-family: 'Plus Jakarta Sans', sans-serif; overflow-x: hidden; }
         
         /* Unique background effects */

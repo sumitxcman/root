@@ -4,7 +4,7 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 
-echo "<h2>--- MY SHOP Debugging Mode ---</h2>";
+echo "<h2>--- MODEST MISSION Debugging Mode ---</h2>";
 
 // 2. Check Database File
 $db_file = __DIR__ . '/include/db.php';

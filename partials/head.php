@@ -7,6 +7,7 @@
     <title>E-Commerce Admin</title>
    <link rel="stylesheet" href="/HotDocs/css/style.css">
     <style>
+        html { font-size: 14px; /* Global scale down */ }
         body { font-family: sans-serif; display: flex; margin: 0; }
         .sidebar { width: 250px; background: #333; color: white; height: 100vh; padding: 20px; }
         .sidebar a { display: block; color: white; padding: 10px; text-decoration: none; }

@@ -13,7 +13,7 @@
             <iconify-icon icon="solar:shop-bold-duotone" class="text-2xl text-white"></iconify-icon>
         </div>
         <div>
-            <h1 class="text-white text-xl font-black tracking-tighter uppercase leading-none">MY SHOP</h1>
+            <h1 class="text-white text-xl font-black tracking-tighter uppercase leading-none">MODEST MISSION</h1>
             <p class="text-[8px] font-bold text-blue-500 tracking-[0.3em] uppercase mt-1">Admin</p>
         </div>
     </div>
@@ -96,6 +96,8 @@
                 </a>
             </div>
         </div>
+
+
     </nav>
 
     <!-- Logout Area -->

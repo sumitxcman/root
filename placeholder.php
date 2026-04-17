@@ -7,11 +7,12 @@ require_once 'include/auth.php';
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Module Under Development | MY SHOP</title>
+    <title>Module Under Development | MODEST MISSION</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        html { font-size: 14px; /* Global scale down */ }
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #020617; color: #94a3b8; overflow: hidden; }
         
         /* Premium Background Glows */

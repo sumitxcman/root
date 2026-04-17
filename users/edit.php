@@ -79,8 +79,9 @@
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        html { font-size: 12px; /* Global scale down */ }
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #020617; color: #94a3b8; }
-        .main-content { width: 100%; max-width: 1000px; margin: 0 auto; min-height: 100vh; padding: 4rem 2rem; }
+        .main-content { width: 100%; max-width: 1000px; margin: 0 auto; min-height: 100vh; padding: 3rem 1.5rem; }
         .btn-lux { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 0.75rem 1.5rem; border-radius: 0.75rem; font-weight: 700; transition: 0.3s; border: none; cursor: pointer; }
         .btn-lux:hover { transform: translateY(-2px); box-shadow: 0 10px 20px -5px rgba(37, 99, 235, 0.4); }
     </style>
@@ -91,7 +92,7 @@
         <div class="max-w-4xl mx-auto">
             <div class="flex justify-between items-center mb-8">
                 <div>
-                    <h2 class="text-3xl font-black text-white uppercase tracking-tighter">Edit Member</h2>
+                    <h2 class="text-2xl font-black text-white uppercase tracking-tighter">Edit Member</h2>
                     <p class="text-slate-500 mt-1">Update details for <span class="text-blue-500 font-bold"><?= htmlspecialchars($user['fullname']) ?></span></p>
                 </div>
             </div>

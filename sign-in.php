@@ -67,11 +67,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign In | MY SHOP Admin</title>
+    <title>Sign In | MODEST MISSION Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        html { font-size: 14px; /* Global scale down */ }
         body { font-family: 'Poppins', sans-serif; background-color: #020617; color: white; overflow: hidden; }
         /* Background Glows */
         .glow-circle-1 { position: absolute; width: 400px; height: 400px; background: radial-gradient(circle, rgba(59,130,246,0.3) 0%, rgba(0,0,0,0) 70%); top: -100px; left: -100px; border-radius: 50%; z-index: -1; }
@@ -126,7 +127,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="w-14 h-14 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl mx-auto flex items-center justify-center mb-4 shadow-lg shadow-blue-500/30">
                 <iconify-icon icon="solar:shop-bold-duotone" class="text-3xl text-white"></iconify-icon>
             </div>
-            <h1 class="text-2xl font-bold tracking-tight text-white">MY SHOP</h1>
+            <h1 class="text-2xl font-bold tracking-tight text-white">MODEST MISSION</h1>
             <p class="text-slate-400 text-sm mt-1">Admin Access Portal</p>
         </div>
 

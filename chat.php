@@ -6,11 +6,12 @@ require_once __DIR__ . '/include/load.php';
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Customer Chat | MY SHOP Admin</title>
+    <title>Customer Chat | MODEST MISSION Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family= आउटफिट:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        html { font-size: 14px; /* Global scale down */ }
         body { background-color: #020617; color: #94a3b8; font-family: 'Outfit', sans-serif; overflow: hidden; }
         .glass-panel { background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.05); }
         .chat-bubble-sent { background: linear-gradient(135deg, #3b82f6 0%, #4f46e5 100%); color: white; border-radius: 20px 20px 4px 20px; }
@@ -25,7 +26,7 @@ require_once __DIR__ . '/include/load.php';
     <header class="h-16 glass-panel border-b flex items-center px-6 justify-between flex-shrink-0 z-10">
         <div class="flex items-center gap-4">
             <a href="dashboard.php" class="text-slate-400 hover:text-white transition"><iconify-icon icon="solar:alt-arrow-left-line-duotone" class="text-2xl"></iconify-icon></a>
-            <h1 class="text-xl font-black text-white italic">MY SHOP <span class="text-indigo-500 not-italic font-bold ml-2">Chat</span></h1>
+            <h1 class="text-xl font-black text-white italic">MODEST MISSION <span class="text-indigo-500 not-italic font-bold ml-2">Chat</span></h1>
         </div>
         <div class="flex items-center gap-4">
             <div class="relative">

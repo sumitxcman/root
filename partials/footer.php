@@ -3,7 +3,7 @@
                 
                 <div class="flex flex-col gap-1">
                     <p class="text-[10px] text-slate-500 uppercase tracking-[0.2em] font-bold">
-                        &copy; <?php echo date('Y'); ?> <span class="text-white">MY SHOP</span>. All Rights Reserved.
+                        &copy; <?php echo date('Y'); ?> <span class="text-white">MODEST MISSION</span>. All Rights Reserved.
                     </p>
                     <p class="text-[9px] text-slate-600 uppercase tracking-widest font-medium">
                         Crafted for Premium Digital Commerce

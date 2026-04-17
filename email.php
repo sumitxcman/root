@@ -6,11 +6,12 @@ require_once __DIR__ . '/include/load.php';
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Email Marketing | MY SHOP Admin</title>
+    <title>Email Marketing | MODEST MISSION Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        html { font-size: 14px; /* Global scale down */ }
         body { background-color: #020617; color: #94a3b8; font-family: 'Outfit', sans-serif; overflow: hidden; }
         .glass-panel { background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.05); }
         .mail-list-item:hover { background: rgba(59, 130, 246, 0.1); border-left: 3px solid #3b82f6; }
@@ -22,7 +23,7 @@ require_once __DIR__ . '/include/load.php';
     <header class="h-16 glass-panel border-b flex items-center px-6 justify-between flex-shrink-0 z-10 relative">
         <div class="flex items-center gap-4">
             <a href="dashboard.php" class="text-slate-400 hover:text-white transition"><iconify-icon icon="solar:alt-arrow-left-line-duotone" class="text-2xl"></iconify-icon></a>
-            <h1 class="text-xl font-black text-white italic">MY SHOP <span class="text-blue-500 not-italic font-bold ml-2">Mailer</span></h1>
+            <h1 class="text-xl font-black text-white italic">MODEST MISSION <span class="text-blue-500 not-italic font-bold ml-2">Mailer</span></h1>
         </div>
         <div class="flex items-center gap-3">
             <img src="https://ui-avatars.com/api/?name=Admin&background=3b82f6&color=fff" class="w-8 h-8 rounded-full border border-blue-500/50">

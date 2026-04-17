@@ -29,6 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_product'])) {
     $desc = $_POST['description'];
     $price = $_POST['price'];
     $category = $_POST['category'];
+    $stock = $_POST['stock'];
     
     // Check if new image uploaded
     $image_name = $product['image'];
@@ -48,8 +49,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_product'])) {
         }
     }
 
-    $stmt = $conn->prepare("UPDATE products SET name=?, description=?, price=?, image=?, category=? WHERE id=?");
-    if($stmt->execute([$name, $desc, $price, $image_name, $category, $id])) {
+    $stmt = $conn->prepare("UPDATE products SET name=?, description=?, price=?, image=?, category=?, stock=? WHERE id=?");
+    if($stmt->execute([$name, $desc, $price, $image_name, $category, $stock, $id])) {
         $success = "Product updated successfully!";
         // Refresh product data
         $stmt = $conn->prepare("SELECT * FROM products WHERE id = ?");
@@ -64,13 +65,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_product'])) {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Edit Product | MY SHOP Admin</title>
+    <title>Edit Product | MODEST MISSION Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        html { font-size: 12px; /* Global scale down */ }
         body { background-color: #020617; color: #94a3b8; font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; }
-        .main-content { width: 100%; max-width: 1200px; margin: 0 auto; min-height: 100vh; padding: 4rem 2rem; }
+        .main-content { width: 100%; max-width: 1200px; margin: 0 auto; min-height: 100vh; padding: 3rem 1.5rem; }
         .lux-card { background: #0f172a; border-radius: 24px; padding: 30px; border: 1px solid rgba(255,255,255,0.05); }
         .lux-input { width: 100%; background: #0f172a; border: 1px solid #334155; border-radius: 12px; padding: 14px; color: white; outline: none; transition: 0.3s; }
         .lux-input:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
@@ -129,6 +131,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_product'])) {
                         <div>
                             <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest pl-1 block mb-2">Price (₹)</label>
                             <input type="number" name="price" class="lux-input text-emerald-400 font-black text-lg" value="<?= htmlspecialchars($product['price']) ?>" required>
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest pl-1 block mb-2">Inventory Stock</label>
+                            <input type="number" name="stock" class="lux-input text-blue-400 font-black" value="<?= htmlspecialchars($product['stock']) ?>" required>
                         </div>
                         
                         <div>

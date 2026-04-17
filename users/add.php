@@ -67,13 +67,14 @@
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        html { font-size: 12px; /* Global scale down */ }
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #020617; color: #94a3b8; overflow-x: hidden; }
         
         /* Premium Background Glooms */
         .lux-orb-1 { position: absolute; top: -10%; left: -10%; width: 500px; height: 500px; background: radial-gradient(circle, rgba(59,130,246,0.12) 0%, rgba(0,0,0,0) 70%); border-radius: 50%; z-index: -1; filter: blur(80px); }
         .lux-orb-2 { position: absolute; bottom: -5%; right: -5%; width: 600px; height: 600px; background: radial-gradient(circle, rgba(147,51,234,0.08) 0%, rgba(0,0,0,0) 70%); border-radius: 50%; z-index: -1; filter: blur(60px); }
 
-        .main-content { width: 100%; max-width: 1000px; margin: 0 auto; min-height: 100vh; padding: 4rem 2rem; position: relative; z-index: 10; }
+        .main-content { width: 100%; max-width: 1000px; margin: 0 auto; min-height: 100vh; padding: 3rem 1.5rem; position: relative; z-index: 10; }
         
         .lux-container {
             background: rgba(15, 23, 42, 0.4);

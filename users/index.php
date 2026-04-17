@@ -29,8 +29,9 @@ try {
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        html { font-size: 12px; /* Global scale down */ }
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #020617; color: #94a3b8; margin: 0; }
-        .main-content { width: 100%; max-width: 1400px; margin: 0 auto; min-height: 100vh; padding: 4rem 2rem; }
+        .main-content { width: 100%; max-width: 1400px; margin: 0 auto; min-height: 100vh; padding: 3rem 1.5rem; }
         .table-container { background: #0f172a; border-radius: 20px; border: 1px solid #1e293b; overflow: hidden; }
         .input-dark { background: #020617; border: 1px solid #1e293b; color: white; border-radius: 12px; padding: 10px 16px; outline: none; transition: 0.3s; }
     </style>
@@ -40,7 +41,7 @@ try {
     <main class="main-content">
         <header class="mb-10 flex justify-between items-center">
             <div>
-                <h1 class="text-3xl font-black text-white tracking-tighter uppercase italic">Users Database</h1>
+                <h1 class="text-2xl font-black text-white tracking-tighter uppercase italic">Users Database</h1>
                 <p class="text-slate-500 text-sm mt-1">Manage all registered users and their access levels.</p>
             </div>
             <a href="add.php" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 px-8 rounded-xl text-xs uppercase tracking-widest shadow-lg shadow-blue-500/20 transition-all">

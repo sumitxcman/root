@@ -43,11 +43,12 @@ if (isset($_POST['add_id'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Product Catalog - MY SHOP</title>
+    <title>Product Catalog - MODEST MISSION</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        html { font-size: 14px; /* Global scale down */ }
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #020617; color: #94a3b8; margin: 0; }
         .main-content { width: 100%; max-width: 1400px; margin: 0 auto; min-height: 100vh; padding: 4rem 2rem; }
     </style>

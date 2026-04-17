@@ -6,11 +6,12 @@ require_once __DIR__ . '/include/load.php';
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Frequently Asked Questions | MY SHOP</title>
+    <title>Frequently Asked Questions | MODEST MISSION</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;900&display=swap" rel="stylesheet">
     <style>
+        html { font-size: 14px; /* Global scale down */ }
         body { background-color: #020617; color: #94a3b8; font-family: 'Outfit', sans-serif; }
         .glass-header { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(12px); border-bottom: 1px solid #1e293b; }
         .faq-card { background: #0f172a; border: 1px solid #1e293b; border-radius: 16px; cursor: pointer; transition: 0.3s; }
@@ -24,7 +25,7 @@ require_once __DIR__ . '/include/load.php';
 <body class="min-h-screen flex flex-col">
     <!-- Navbar -->
     <header class="glass-header sticky top-0 z-50 h-[80px] flex items-center px-8 justify-between">
-        <a href="index.php" class="text-white text-2xl font-black italic">MY SHOP <span class="not-italic text-sm text-blue-500 align-top ml-1">Support</span></a>
+        <a href="index.php" class="text-white text-2xl font-black italic">MODEST MISSION <span class="not-italic text-sm text-blue-500 align-top ml-1">Support</span></a>
         <a href="dashboard.php" class="text-xs font-bold uppercase tracking-widest text-slate-400 hover:text-white transition">Dashboard Console</a>
     </header>
 
@@ -55,7 +56,7 @@ require_once __DIR__ . '/include/load.php';
                     <iconify-icon icon="solar:alt-arrow-down-bold" class="text-slate-500 icon-toggle transition-transform"></iconify-icon>
                 </div>
                 <div class="faq-answer">
-                    Absolutely. MY SHOP implements AES-256 military-grade encryption alongside Stripe's certified PCI Service Provider Level 1 architecture. Your raw card details never touch our servers.
+                    Absolutely. MODEST MISSION implements AES-256 military-grade encryption alongside Stripe's certified PCI Service Provider Level 1 architecture. Your raw card details never touch our servers.
                 </div>
             </div>
 

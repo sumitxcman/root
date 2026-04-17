@@ -36,8 +36,9 @@ try {
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        html { font-size: 12px; /* Global scale down */ }
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #020617; color: #94a3b8; margin: 0; }
-        .main-content { width: 100%; max-width: 1400px; margin: 0 auto; min-height: 100vh; padding: 4rem 2rem; }
+        .main-content { width: 100%; max-width: 1400px; margin: 0 auto; min-height: 100vh; padding: 3rem 1.5rem; }
         .table-container { background: #0f172a; border-radius: 20px; border: 1px solid #1e293b; overflow: hidden; }
         .input-dark { background: #020617; border: 1px solid #1e293b; color: white; border-radius: 12px; padding: 10px 16px; outline: none; }
     </style>
@@ -47,7 +48,7 @@ try {
     <main class="main-content">
         <header class="mb-10 flex justify-between items-center">
             <div>
-                <h1 class="text-3xl font-black text-white tracking-tighter uppercase italic">Global Catalog</h1>
+                <h1 class="text-2xl font-black text-white tracking-tighter uppercase italic">Global Catalog</h1>
                 <p class="text-slate-500 text-sm mt-1">Real-time inventory sync and collection management.</p>
             </div>
             <a href="add.php" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 px-8 rounded-xl text-xs uppercase tracking-widest shadow-lg shadow-blue-500/20 transition-all">
@@ -61,7 +62,7 @@ try {
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Total Inventory</p>
-                        <h3 class="text-3xl font-black text-white mt-1"><?= $total_products ?></h3>
+                        <h3 class="text-2xl font-black text-white mt-1"><?= $total_products ?></h3>
                     </div>
                     <div class="w-12 h-12 bg-blue-600/10 rounded-xl flex items-center justify-center text-blue-500">
                         <iconify-icon icon="solar:box-minimalistic-bold-duotone" class="text-3xl"></iconify-icon>
@@ -73,7 +74,7 @@ try {
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-[10px] font-black text-emerald-500 uppercase tracking-widest">Total Volume (Revenue)</p>
-                        <h3 class="text-3xl font-black text-white mt-1">₹<?= number_format($total_revenue) ?></h3>
+                        <h3 class="text-2xl font-black text-white mt-1">₹<?= number_format($total_revenue) ?></h3>
                     </div>
                     <div class="w-12 h-12 bg-emerald-600/10 rounded-xl flex items-center justify-center text-emerald-500">
                         <iconify-icon icon="solar:wad-of-money-bold-duotone" class="text-3xl"></iconify-icon>
@@ -85,10 +86,55 @@ try {
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-[10px] font-black text-amber-500 uppercase tracking-widest">Global Orders</p>
-                        <h3 class="text-3xl font-black text-white mt-1"><?= $total_orders ?></h3>
+                        <h3 class="text-2xl font-black text-white mt-1"><?= $total_orders ?></h3>
                     </div>
                     <div class="w-12 h-12 bg-amber-600/10 rounded-xl flex items-center justify-center text-amber-500">
                         <iconify-icon icon="solar:cart-check-bold-duotone" class="text-3xl"></iconify-icon>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Multi-Platform Sync Bridge -->
+        <div class="mb-10 p-8 bg-blue-600/5 border border-blue-500/10 rounded-[2.5rem] relative overflow-hidden">
+            <div class="absolute -top-10 -right-10 w-40 h-40 bg-blue-600/5 rounded-full blur-[80px]"></div>
+            
+            <div class="flex flex-col md:flex-row justify-between items-center gap-8">
+                <div>
+                    <h3 class="text-xl font-black text-white uppercase tracking-tighter italic">Global Inventory Bridge</h3>
+                    <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-1">Status: All platforms synchronized via master node</p>
+                </div>
+                
+                <div class="flex items-center gap-10">
+                    <!-- Website Sync -->
+                    <div class="flex flex-col items-center">
+                        <div class="w-12 h-12 rounded-2xl bg-blue-600/10 border border-blue-500/20 flex items-center justify-center text-blue-500 mb-2">
+                            <iconify-icon icon="solar:shop-bold-duotone" class="text-2xl"></iconify-icon>
+                        </div>
+                        <p class="text-[8px] font-black text-white uppercase tracking-widest">Modest Mission</p>
+                        <span class="text-[7px] text-emerald-500 font-bold uppercase mt-1 flex items-center gap-1"><span class="w-1 h-1 rounded-full bg-emerald-500 animate-pulse"></span> Active</span>
+                    </div>
+                    
+                    <div class="h-8 w-[1px] bg-slate-800"></div>
+
+                    <!-- Amazon Sync -->
+                    <div class="flex flex-col items-center opacity-70 hover:opacity-100 transition-opacity">
+                        <div class="w-12 h-12 rounded-2xl bg-amber-600/10 border border-amber-500/20 flex items-center justify-center text-amber-500 mb-2">
+                            <iconify-icon icon="logos:aws" class="text-xl"></iconify-icon>
+                        </div>
+                        <p class="text-[8px] font-black text-white uppercase tracking-widest">Amazon Hub</p>
+                        <span class="text-[7px] text-emerald-500 font-bold uppercase mt-1 flex items-center gap-1"><span class="w-1 h-1 rounded-full bg-emerald-500"></span> Synced</span>
+                    </div>
+
+                    <div class="h-8 w-[1px] bg-slate-800"></div>
+
+                    <!-- Flipkart Sync -->
+                    <div class="flex flex-col items-center opacity-70 hover:opacity-100 transition-opacity">
+                        <div class="w-12 h-12 rounded-2xl bg-indigo-600/10 border border-indigo-500/20 flex items-center justify-center text-white mb-2 font-black italic text-xs">
+                            Fk
+                        </div>
+                        <p class="text-[8px] font-black text-white uppercase tracking-widest">Flipkart Node</p>
+                        <span class="text-[7px] text-emerald-500 font-bold uppercase mt-1 flex items-center gap-1"><span class="w-1 h-1 rounded-full bg-emerald-500"></span> Synced</span>
                     </div>
                 </div>
             </div>
@@ -115,6 +161,7 @@ try {
                             <th class="px-6 py-4">Thumbnail</th>
                             <th class="px-6 py-4">Product Specs</th>
                             <th class="px-6 py-4">Classification</th>
+                            <th class="px-6 py-4">Stock Avail.</th>
                             <th class="px-6 py-4">Price Tier</th>
                             <th class="px-6 py-4 text-center">Lifecycle</th>
                         </tr>
@@ -142,6 +189,16 @@ try {
                                 <span class="px-4 py-1.5 bg-blue-600/10 border border-blue-600/20 text-blue-500 rounded-full text-[10px] font-black uppercase tracking-widest">
                                     <?= htmlspecialchars($prod['category'] ?? 'General') ?>
                                 </span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex flex-col">
+                                    <span class="text-white font-black text-sm"><?= $prod['stock'] ?> Units</span>
+                                    <?php if($prod['stock'] <= 5): ?>
+                                        <span class="text-[8px] font-black text-red-500 uppercase tracking-widest mt-1">Low Inventory Alert</span>
+                                    <?php else: ?>
+                                        <span class="text-[8px] font-black text-emerald-500 uppercase tracking-widest mt-1">Stock Healthy</span>
+                                    <?php endif; ?>
+                                </div>
                             </td>
                             <td class="px-6 py-4 font-black text-white text-sm">
                                 ₹<?= number_format((float)$prod['price']) ?>
